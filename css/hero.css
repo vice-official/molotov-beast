@@ -1,0 +1,110 @@
+.hero-bg {
+  position: relative;
+  background-image: linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.4)), url('../images/molotov1.jpg');
+  background-size: cover;
+  background-position: top;
+  clip-path: path("M0,0 H100% V100% H120 Q60 100, 0 85 Z");
+}
+
+.hero-socials {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: socialsFadeIn 0.8s ease-out forwards;
+  animation-delay: 0.6s;
+}
+
+@keyframes socialsFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--brand-600);
+  font-size: 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: buttonFadeIn 0.6s forwards;
+}
+
+.hero-socials a:nth-child(1) { animation-delay: 0.7s; }
+.hero-socials a:nth-child(2) { animation-delay: 0.85s; }
+.hero-socials a:nth-child(3) { animation-delay: 1s; }
+
+@keyframes buttonFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-socials a:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  background: var(--brand-600);
+  color: white;
+}
+
+.hero-mac-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--brand-600), var(--brand-500));
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1;
+}
+
+.hero-mac-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: skewX(-20deg);
+  transition: all 0.6s ease;
+  z-index: 0;
+}
+
+.hero-mac-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+.hero-mac-btn:hover::before {
+  left: 100%;
+}
+
+.hero-mac-btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+.hero-mac-btn span {
+  position: relative;
+  z-index: 2;
+}

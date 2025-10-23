@@ -1,0 +1,109 @@
+.navbar-mac {
+  position: fixed;
+  top: 1rem;
+  left: 50%; 
+  transform: translateX(-50%); 
+  width: 92%; 
+  z-index: 2000;
+  background: rgba(255, 255, 255, 0.85); 
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.navbar-inner {
+  height: 60px;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+  transition: color 0.18s ease, transform 0.18s ease;
+  color: #1e293b; 
+  font-weight: 500;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: #007aff; 
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s ease;
+}
+
+.nav-link:hover {
+  transform: translateY(-1px);
+  color: #007aff; 
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.rounded-contact-btn {
+  background: linear-gradient(90deg, #007aff, #409cff);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rounded-contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
+  background: linear-gradient(90deg, #006ee6, #308cff);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .navbar-mac {
+    width: 96%;
+    top: 0.5rem;
+    background: rgba(255, 255, 255, 0.95); 
+  }
+  
+  .navbar-inner {
+    padding: 0 1rem;
+  }
+  
+  .navbar-inner nav {
+    display: none;
+  }
+  
+  .nav-link {
+    font-size: 14px;
+  }
+}
+
+body {
+  padding-top: 80px; 
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-top: 70px; 
+  }
+}

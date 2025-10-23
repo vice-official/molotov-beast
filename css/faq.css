@@ -1,0 +1,129 @@
+.faq-section {
+  background-color: #f1f5f9;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .faq-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.faq-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.faq-item {
+  transition: all 0.3s ease;
+  min-height: 100px; 
+}
+
+.faq-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: inherit; 
+}
+
+.faq-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.faq-card.open {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  cursor: pointer;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+.faq-arrow {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-right: 2px solid #64748b;
+  border-bottom: 2px solid #64748b;
+  transform: rotate(45deg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 0.25rem;
+}
+
+.faq-card.open .faq-arrow {
+  transform: rotate(-135deg);
+  border-color: #007aff;
+}
+
+.faq-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-10px);
+}
+
+.faq-card.open .faq-content {
+  max-height: none; 
+  height: auto; 
+  opacity: 1;
+  transform: translateY(0);
+  padding-top: 1rem;
+  overflow: visible; 
+}
+
+.faq-content > div {
+  color: #475569;
+  line-height: 1.6;
+  font-size: 1rem;
+  overflow: visible; 
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 767px) {
+  .faq-card {
+    padding: 1.25rem;
+  }
+  
+  .faq-item {
+    min-height: 90px;
+  }
+  
+  .faq-question {
+    font-size: 1rem;
+  }
+  
+  .faq-content > div {
+    font-size: 0.95rem;
+  }
+}

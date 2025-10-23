@@ -1,0 +1,124 @@
+:root {
+  --tg-blue: #0088cc;
+  --tg-blue-hover: #0099e6;
+}
+
+/* Общий контейнер */
+.float-wrapper {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column-reverse; /* Табличка сверху */
+  align-items: flex-end;          /* Выравнивание по правому краю */
+  gap: 0.8rem;
+  z-index: 200;
+}
+
+/* Кнопка */
+.float-btn {
+  width: 64px;
+  height: 64px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 28px rgba(0, 136, 204, 0.35);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.float-btn i {
+  font-size: 34px;
+  color: var(--tg-blue);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.float-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 10px 36px rgba(0, 136, 204, 0.45);
+}
+
+.float-btn:hover i {
+  color: var(--tg-blue-hover);
+  transform: scale(1.1);
+}
+
+/* Табличка */
+.float-tip {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px) saturate(180%);
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  margin-right: 0.8rem;
+  max-width: 260px;
+  text-align: center;
+  white-space: normal; /* Разрешаем перенос строк */
+  word-break: break-word; /* Перенос слов при необходимости */
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+/* Плавное появление */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -------- Адаптив -------- */
+@media (max-width: 768px) {
+  .float-wrapper {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    gap: 0.7rem;
+  }
+
+  .float-tip {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.9rem;
+    max-width: 200px;
+    text-align: left; /* лучше читается на маленьких экранах */
+  }
+
+  .float-btn {
+    width: 58px;
+    height: 58px;
+  }
+  .float-btn i {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .float-wrapper {
+    bottom: 1.2rem;
+    right: 1.2rem;
+    gap: 0.6rem;
+  }
+
+  .float-tip {
+    font-size: 0.85rem;
+    padding: 0.55rem 0.8rem;
+    max-width: 170px;
+  }
+
+  .float-btn {
+    width: 54px;
+    height: 54px;
+  }
+  .float-btn i {
+    font-size: 28px;
+  }
+}
