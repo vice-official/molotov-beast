@@ -5,12 +5,8 @@ cards.forEach((card) => {
   const btn = card.querySelector(".btn-more");
   if (!btn) return;
 
-  card.addEventListener("mouseenter", () => {
-    card.classList.add("is-hovered");
-  });
-  card.addEventListener("mouseleave", () => {
-    setTimeout(() => card.classList.remove("is-hovered"), 250);
-  });
+  card.addEventListener("mouseenter", () => card.classList.add("is-hovered"));
+  card.addEventListener("mouseleave", () => setTimeout(() => card.classList.remove("is-hovered"), 250));
 
   btn.addEventListener("click", () => {
     const modalId = card.dataset.modal;
@@ -18,57 +14,78 @@ cards.forEach((card) => {
     if (!modal) return;
 
     const title = card.querySelector("h3").textContent.trim();
-    const imgSrc = card.querySelector(".card-img").getAttribute("src");
     const modalBody = modal.querySelector(".modal-body");
-    const modalImage = modal.querySelector(".modal-image");
 
-    modalImage.style.backgroundImage = `url('${imgSrc}')`;
+    // фон модалки
+    const modalImage = modal.querySelector(".modal-image");
+    if (modalImage) {
+      const imgSrc = card.querySelector(".card-img")?.getAttribute("src");
+      if (imgSrc) modalImage.style.backgroundImage = `url('${imgSrc}')`;
+    }
+
+    const btnHTML = `
+      <a class="btn-buy"
+         href="https://t.me/M0L0T0W"
+         target="_blank"
+         rel="noopener noreferrer">
+         Связаться
+      </a>`;
 
     let content = "";
 
     if (modalId === "start") {
       content = `
         <h3>${title}</h3>
-        <div class="modal-price">₽7 500 / мес</div>
-        <small style="opacity:.7;font-size:.85rem;display:block;margin-bottom:1rem;">Полное ведение (≈ 4 мес) — ₽30 000</small>
-        <button class="btn-buy">Купить</button>
         <p class="modal-description">
           Идеальный выбор, если ты хочешь начать путь к результату с персонально подобранной схемы.
-          Тариф включает индивидуальный подбор препаратов на основе анализов и текущего состояния здоровья.
-          Ты получаешь точную схему приёма и дозировки под твои цели.
-          Отлично подходит для тех, кто точно знает чего хочет.
         </p>
+        <div class="modal-price">₽7 500 / мес</div>
+        <small style="opacity:.7;font-size:.85rem;display:block;margin-bottom:1rem;">
+          Полное ведение (≈ 4 мес) — ₽30 000
+        </small>
+        ${btnHTML}
       `;
     } else if (modalId === "breakthrough") {
       content = `
         <h3>${title}</h3>
-        <div class="modal-price">₽20 000 / мес</div>
-        <button class="btn-buy">Купить</button>
         <p class="modal-description">
-          Для тех, кто готов идти до конца.
-          Тариф включает полное ведение с персональным питанием, тренировками и отчётами каждую неделю,
-          а также всё то, что входит в тариф «Старт»: индивидуальный подбор препаратов и корректировки по анализам.
-          Ты получаешь системный подход к тренировкам и питанию, где все работает на твой прогресс.
+          Для тех, кто готов идти до конца. Тариф включает полное ведение и индивидуальные корректировки.
         </p>
+        <div class="modal-price">₽20 000 / мес</div>
+        <small style="opacity:.7;font-size:.85rem;display:block;margin-bottom:1rem;">
+          Полное ведение (≈ 4 мес) — ₽80 000
+        </small>
+        ${btnHTML}
       `;
     } else if (modalId === "premium") {
       content = `
         <h3>${title}</h3>
-        <div class="modal-price">₽40 000 / мес</div>
-        <button class="btn-buy">Купить</button>
         <p class="modal-description">
-          Максимальный уровень сопровождения и вовлечённости.
-          Включает в себя все преимущества тарифа «Прорыв», а также <strong>постоянную обратную связь 24/7</strong> —
-          ответы на любые вопросы «что, почему и как», детальный разбор анализов, объяснение принципов тренировок, индивидуальные корректировки по ходу работы.
-          Иногда в рамках тарифа проводятся <strong>очные тренировки</strong>.
-          Этот формат ведения подойдет тем, кто хочет добиться максимального результата и выложиться на все 200%. 
+          Максимальный уровень сопровождения и вовлечённости, постоянная обратная связь 24/7.
         </p>
+        <div class="modal-price">₽40 000 / мес</div>
+        <small style="opacity:.7;font-size:.85rem;display:block;margin-bottom:1rem;">
+          Полное ведение (≈ 4 мес) — ₽160 000
+        </small>
+        ${btnHTML}
       `;
     }
 
     modalBody.innerHTML = content;
     modal.classList.add("active");
     body.classList.add("modal-open");
+
+    const buyLink = modalBody.querySelector(".btn-buy[href]");
+    if (buyLink) {
+      buyLink.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const url = buyLink.getAttribute("href");
+        window.open(url, "_blank", "noopener,noreferrer");
+        modal.classList.remove("active");
+        body.classList.remove("modal-open");
+        setTimeout(() => window.scrollTo(0, savedY), 60);
+      });
+    }
   });
 });
 
@@ -86,3 +103,51 @@ window.addEventListener("click", (e) => {
     body.classList.remove("modal-open");
   }
 });
+
+// ===== Scroll lock =====
+(function(){
+  let savedY = 0;
+  const html = document.documentElement;
+  const body = document.body;
+
+  function lockScroll(){
+    savedY = window.scrollY || document.documentElement.scrollTop || 0;
+    body.style.position = 'fixed';
+    body.style.top = `-${savedY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+    body.style.overflowY = 'scroll';
+    body.style.overflowX = 'hidden';
+    html.style.overflowX = 'hidden';
+    html.classList.add('modal-open');
+    body.classList.add('modal-open');
+  }
+
+  function unlockScroll(){
+    const y = savedY;
+    body.style.position = '';
+    body.style.top = '';
+    body.style.left = '';
+    body.style.right = '';
+    body.style.width = '';
+    body.style.overflow = '';
+    html.style.overflowX = '';
+    html.classList.remove('modal-open');
+    body.classList.remove('modal-open');
+    requestAnimationFrame(() => window.scrollTo(0, y));
+  }
+
+  function syncLockState(){
+    const isActive = !!document.querySelector('.modal.active');
+    isActive ? lockScroll() : unlockScroll();
+  }
+
+  document.querySelectorAll('.modal').forEach(m => {
+    new MutationObserver(syncLockState).observe(m, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  window.addEventListener('orientationchange', syncLockState);
+  window.addEventListener('resize', syncLockState);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setTimeout(syncLockState, 0); });
+})();

@@ -1,0 +1,89 @@
+/* Light, clean cards for Certifications */
+#certs .cs-card {
+  background: #fff;
+  border: 1px solid #e5e7eb; /* slate-200 */
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+#certs .cs-card:hover {
+  box-shadow: 0 6px 28px rgba(16, 24, 40, 0.08),
+    0 2px 8px rgba(16, 24, 40, 0.06);
+  transform: translateY(-1px);
+}
+
+#certs .cs-media {
+  position: relative;
+  aspect-ratio: 4/3;
+  background: #f8fafc; /* slate-50 */
+  border-bottom: 1px solid #f1f5f9; /* slate-100 */
+  overflow: hidden;
+}
+#certs .cs-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 0.4s ease;
+  display: block;
+}
+#certs .cs-card:hover .cs-media img {
+  transform: scale(1.02);
+}
+
+/* ======== Zoom button (identical to cs-close) ======== */
+#certs .cs-zoom {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.12s cubic-bezier(0.25, 0.8, 0.25, 1),
+              background 0.2s,
+              border-color 0.2s;
+}
+#certs .cs-zoom:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+#certs .cs-zoom svg {
+  width: 18px;
+  height: 18px;
+  stroke: #fff;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* ======== Metadata (light text) ======== */
+#certs .cs-meta {
+  padding: 12px 14px;
+  background: #fff;
+}
+#certs .cs-title {
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.4;
+}
+#certs .cs-sub {
+  margin-top: 2px;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* Smaller aspect ratio on desktop */
+@media (min-width:1024px) {
+  #certs .cs-media {
+    aspect-ratio: 3/2;
+  }
+}

@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-
 <html lang="ru">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;icon_names=check_small" rel="stylesheet"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=check_small" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+
 <title>MOLOTOV — Тело мечты без пустой болтовни</title>
-<meta content="Индивидуальные планы питания и тренировок по анализам. Безопасно, законно, по делу." name="description"/>
+<meta name="description" content="Индивидуальные планы питания и тренировок по анализам. Безопасно, законно, по делу." />
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 <link rel="stylesheet" href="css/chatshots.css" />
@@ -21,333 +23,193 @@
 <link rel="stylesheet" href="css/faq.css">
 <link rel="stylesheet" href="css/float-button.css">
 <link rel="stylesheet" href="css/process.css">
+<link rel="stylesheet" href="css/about.css">
+
+<!-- Кнопка отправки (состояния) -->
 <style>
-
-.btn-submit.btn-error{
-  background:#ef4444 !important;
-  box-shadow:0 10px 24px rgba(239,68,68,.35) !important;
-}
-.btn-submit.btn-sent{
-  background:#16a34a !important;
-  box-shadow:0 10px 24px rgba(22,163,74,.35) !important;
-}
-.btn-submit[disabled]{opacity:.92;cursor:not-allowed;}
-
+.btn-submit.btn-error{background:#ef4444!important;box-shadow:0 10px 24px rgba(239,68,68,.35)!important}
+.btn-submit.btn-sent{background:var(--brand-600, #007aff)!important;box-shadow:0 10px 24px rgba(0,122,255,.35)!important}
+.btn-submit[disabled]{opacity:.92;cursor:not-allowed}
 </style>
+
+<!-- Исправления секции ДО/ПОСЛЕ и лейблов -->
 <style>
-
-.float-btn svg, .float-btn svg path { fill:#fff !important; stroke:none !important; }
-
-
-.chatshots-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
-  gap:16px;
-  margin-top:1rem;
+.compare-card{
+  position:relative; overflow:hidden; border-radius:20px;
+  border:1px solid rgba(15,23,42,.06); box-shadow:0 8px 20px rgba(0,0,0,.08);
+  aspect-ratio:16/9; background:#000; cursor:ew-resize; user-select:none;
 }
-.chatshot-card {
-  aspect-ratio: 3/4;       
-  border-radius:16px;
-  overflow:hidden;
-  background:#0f172a;
-  box-shadow:0 6px 18px rgba(0,0,0,.25);
-  position:relative;
-  cursor:zoom-in;
+.before-wrapper,.after-wrapper{position:absolute; top:0; height:100%; overflow:hidden}
+.before-wrapper{left:0; width:50%}
+.after-wrapper{right:0; width:50%}
+.before-img,.after-img{
+  width:100%; height:100%; object-fit:cover; object-position:center top; display:block;
+  border-radius:inherit; pointer-events:none; transition:transform .3s ease;
 }
-.chatshot-card img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
+.compare-card:hover .before-img,.compare-card:hover .after-img{ transform:scale(1.06) }
 
+.slider-line{position:absolute; inset:0 auto 0 50%; width:2px; background:rgba(255,255,255,.85); z-index:2; pointer-events:none}
+.slider-handle{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:40px; height:40px; border-radius:9999px; background:rgba(255,255,255,.95);
+  border:1px solid rgba(15,23,42,.06); box-shadow:0 4px 15px rgba(0,0,0,.25);
+  display:grid; place-items:center; z-index:3; pointer-events:none;
+}
+.slider-icon{font-size:18px; color:#0f172a; font-weight:700}
 
-.chatshot-lightbox {
-  position:fixed; inset:0;
-  background:rgba(0,0,0,.88);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index: 9999;
+/* Лейблы — фикс чужого синего текста */
+.label{
+  position:absolute; top:12px; padding:4px 10px; background:rgba(0,0,0,.65);
+  color:#fff; font-size:14px; border-radius:6px; pointer-events:none; z-index:4; backdrop-filter:blur(3px)
 }
-.chatshot-lightbox.open { display:flex; }
-.chatshot-lightbox img {
-  max-width:92vw; max-height:92vh;
-  border-radius:12px;
-  box-shadow:0 12px 36px rgba(0,0,0,.45);
-}
-.chatshot-lightbox .close {
-  position:absolute; top:20px; right:24px;
-  font-size:28px; line-height:1; color:#fff;
-  background:transparent; border:none; cursor:pointer;
-  opacity:.85;
+.before-label{left:12px}
+.after-label{right:12px}
+
+/* Мобильный слайдер (оставляем существующий JS, прячем ручку разделения) */
+@media (max-width:768px){
+  .clients-grid{display:block!important; position:relative; overflow:hidden}
+  .mobile-slider-track{display:flex; width:100%; gap:0; transition:transform .4s ease}
+  .mobile-slider-track .compare-card{flex:0 0 100%; max-width:100%; margin:0}
+  .compare-card{cursor:default!important}
+  .slider-line,.slider-handle{display:none!important}
 }
 </style>
+
+<!-- Стили ссылки на основной сайт и иконок -->
 <style>
-
-
-.float-btn svg, .float-btn svg path { fill:#fff !important; stroke:none !important; }
-
-
-[data-chatshots], #chatshots, .chatshots-root { 
-  --card-r: 16px;
+:root{
+  --brand-600:#007aff; --brand-700:#005fcc; --brand-500:#1a8cff; --brand-400:#409cff;
 }
-[data-chatshots] .chatshots-grid,
-#chatshots .chatshots-grid,
-.chatshots-root .chatshots-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
-  gap:16px;
-  margin-top:1rem;
+.main-site-link{
+  color:var(--brand-600); font-weight:600; text-decoration:none;
+  border-bottom:1px solid rgba(0,122,255,.35); transition:color .25s ease,border-color .25s ease
 }
-[data-chatshots] .chatshot-card,
-#chatshots .chatshot-card,
-.chatshots-root .chatshot-card {
-  aspect-ratio: 3/4;
-  border-radius: var(--card-r);
-  overflow:hidden;
-  background:#0f172a;
-  box-shadow:0 6px 18px rgba(0,0,0,.25);
-  position:relative;
-  cursor:zoom-in;
-  transition: transform .22s ease, box-shadow .24s ease;
-}
-[data-chatshots] .chatshot-card:hover,
-#chatshots .chatshot-card:hover,
-.chatshots-root .chatshot-card:hover {
-  transform: translateY(-2px);
-  box-shadow:0 10px 28px rgba(0,0,0,.30);
-}
-[data-chatshots] .chatshot-card img,
-#chatshots .chatshot-card img,
-.chatshots-root .chatshot-card img {
-  width:100%; height:100%; object-fit:cover; display:block;
-}
-
-[data-chatshots] .chatshot-open,
-#chatshots .chatshot-open,
-.chatshots-root .chatshot-open {
-  position:absolute; right:10px; bottom:10px;
-  width:28px; height:28px; border-radius:9999px;
-  background:rgba(255,255,255,.35);
-  backdrop-filter: blur(8px) saturate(180%);
-  -webkit-backdrop-filter: blur(8px) saturate(180%);
-  box-shadow:0 4px 12px rgba(0,0,0,.25);
-  color:#0f172a;
-  display:flex; align-items:center; justify-content:center;
-  transition: transform .2s ease, background .2s ease, opacity .2s ease;
-  opacity:0;
-}
-[data-chatshots] .chatshot-card:hover .chatshot-open,
-#chatshots .chatshot-card:hover .chatshot-open,
-.chatshots-root .chatshot-card:hover .chatshot-open {
-  opacity:1;
-  transform: translateY(-1px);
-}
-[data-chatshots] .chatshot-open svg,
-#chatshots .chatshot-open svg,
-.chatshots-root .chatshot-open svg { width:16px; height:16px; fill:currentColor; }
-
-
-.chatshot-lightbox {
-  position:fixed; inset:0; z-index:9999;
-  background:rgba(0,0,0,.88);
-  display:block;
-  opacity:0; visibility:hidden;
-  transition: opacity .25s ease, visibility 0s linear .25s;
-}
-.chatshot-lightbox.open {
-  opacity:1; visibility:visible;
-  transition: opacity .25s ease, visibility 0s linear 0s;
-}
-.chatshot-lightbox .stage {
-  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
-}
-.chatshot-lightbox img {
-  max-width:92vw; max-height:92vh;
-  border-radius:12px;
-  box-shadow:0 12px 36px rgba(0,0,0,.45);
-  transform: scale(.965);
-  transition: transform .25s ease;
-}
-.chatshot-lightbox.open img { transform: scale(1); }
-.chatshot-lightbox .close {
-  position:absolute; top:20px; right:24px;
-  font-size:28px; line-height:1; color:#fff;
-  background:transparent; border:none; cursor:pointer; opacity:.85;
-  transition: transform .2s ease, opacity .2s ease;
-}
-.chatshot-lightbox .close:hover { transform: translateY(-1px); opacity:1; }
-</style>
-<style>
-
-
-.float-btn svg, .float-btn svg path { fill:#fff !important; stroke:none !important; }
-
-
-[data-chatshots], #chatshots, .chatshots-root { --card-r: 16px; }
-[data-chatshots] .chatshots-grid, #chatshots .chatshots-grid, .chatshots-root .chatshots-grid {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:1rem;
-}
-[data-chatshots] .chatshot-card, #chatshots .chatshot-card, .chatshots-root .chatshot-card {
-  aspect-ratio:3/4; border-radius:var(--card-r); overflow:hidden; background:#0f172a;
-  box-shadow:0 6px 18px rgba(0,0,0,.25); position:relative; cursor:zoom-in;
-  transition: transform .22s ease, box-shadow .24s ease;
-}
-[data-chatshots] .chatshot-card:hover, #chatshots .chatshot-card:hover, .chatshots-root .chatshot-card:hover {
-  transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,0,0,.30);
-}
-[data-chatshots] .chatshot-card img, #chatshots .chatshot-card img, .chatshots-root .chatshot-card img {
-  width:100%; height:100%; object-fit:cover; display:block;
-}
-
-[data-chatshots] .chatshot-open, #chatshots .chatshot-open, .chatshots-root .chatshot-open {
-  position:absolute; right:10px; bottom:10px; width:28px; height:28px; border-radius:9999px;
-  background:rgba(255,255,255,.35); backdrop-filter: blur(8px) saturate(180%);
-  -webkit-backdrop-filter: blur(8px) saturate(180%);
-  box-shadow:0 4px 12px rgba(0,0,0,.25); color:#0f172a;
-  display:flex; align-items:center; justify-content:center;
-  transition: transform .2s ease, background .2s ease, opacity .2s ease; opacity:0;
-}
-[data-chatshots] .chatshot-card:hover .chatshot-open, #chatshots .chatshot-card:hover .chatshot-open, .chatshots-root .chatshot-card:hover .chatshot-open {
-  opacity:1; transform: translateY(-1px);
-}
-[data-chatshots] .chatshot-open svg, #chatshots .chatshot-open svg, .chatshots-root .chatshot-open svg { width:16px; height:16px; fill:currentColor; }
-
-.chatshot-lightbox { position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.88);
-  display:block; opacity:0; visibility:hidden; transition: opacity .25s ease, visibility 0s linear .25s; }
-.chatshot-lightbox.open { opacity:1; visibility:visible; transition: opacity .25s ease, visibility 0s linear 0s; }
-.chatshot-lightbox .stage { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-.chatshot-lightbox img { max-width:92vw; max-height:92vh; border-radius:12px; box-shadow:0 12px 36px rgba(0,0,0,.45);
-  transform:scale(.965); transition: transform .25s ease; }
-.chatshot-lightbox.open img { transform:scale(1); }
-.chatshot-lightbox .close { position:absolute; top:20px; right:24px; font-size:28px; line-height:1; color:#fff;
-  background:transparent; border:none; cursor:pointer; opacity:.85; transition: transform .2s ease, opacity .2s ease; }
-.chatshot-lightbox .close:hover { transform: translateY(-1px); opacity:1; }
-
-
-.beforeafter-root .compare-card, [data-beforeafter] .compare-card, #before-after .compare-card { position: relative; }
-.beforeafter-root .label, [data-beforeafter] .label, #before-after .label { z-index: 2; }
-
-</style>
-<style>
-
-.float-btn svg, .float-btn svg path { fill:#fff !important; stroke:none !important; }
-
-
-[data-chatshots], #chatshots, .chatshots-root { --card-r: 16px; }
-[data-chatshots] .chatshots-grid, #chatshots .chatshots-grid, .chatshots-root .chatshots-grid {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:1rem;
-}
-[data-chatshots] .chatshot-card, #chatshots .chatshot-card, .chatshots-root .chatshot-card {
-  aspect-ratio:3/4; border-radius:var(--card-r); overflow:hidden; background:#0f172a;
-  box-shadow:0 6px 18px rgba(0,0,0,.25); position:relative; cursor:zoom-in;
-  transition: transform .22s ease, box-shadow .24s ease;
-}
-[data-chatshots] .chatshot-card:hover, #chatshots .chatshot-card:hover, .chatshots-root .chatshot-card:hover {
-  transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,0,0,.30);
-}
-[data-chatshots] .chatshot-card img, #chatshots .chatshot-card img, .chatshots-root .chatshot-card img {
-  width:100%; height:100%; object-fit:cover; display:block;
-}
-
-[data-chatshots] .chatshot-open, #chatshots .chatshot-open, .chatshots-root .chatshot-open {
-  position:absolute; right:10px; bottom:10px; width:28px; height:28px; border-radius:9999px;
-  background:rgba(255,255,255,.35); backdrop-filter: blur(8px) saturate(180%);
-  -webkit-backdrop-filter: blur(8px) saturate(180%);
-  box-shadow:0 4px 12px rgba(0,0,0,.25); color:#0f172a;
-  display:flex; align-items:center; justify-content:center;
-  transition: transform .2s ease, background .2s ease, opacity .2s ease; opacity:0;
-}
-[data-chatshots] .chatshot-card:hover .chatshot-open, #chatshots .chatshot-card:hover .chatshot-open, .chatshots-root .chatshot-card:hover .chatshot-open {
-  opacity:1; transform: translateY(-1px);
-}
-[data-chatshots] .chatshot-open svg, #chatshots .chatshot-open svg, .chatshots-root .chatshot-open svg { width:16px; height:16px; fill:currentColor; }
-
-
-.chatshot-lightbox { position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.88);
-  display:block; opacity:0; visibility:hidden; transition: opacity .25s ease, visibility 0s linear .25s; }
-.chatshot-lightbox.open { opacity:1; visibility:visible; transition: opacity .25s ease, visibility 0s linear 0s; }
-.chatshot-lightbox .stage { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-.chatshot-lightbox img { max-width:92vw; max-height:92vh; border-radius:12px; box-shadow:0 12px 36px rgba(0,0,0,.45);
-  transform:scale(.965); transition: transform .25s ease; }
-.chatshot-lightbox.open img { transform:scale(1); }
-.chatshot-lightbox .close { position:absolute; top:20px; right:24px; font-size:28px; line-height:1; color:#fff;
-  background:transparent; border:none; cursor:pointer; opacity:.85; transition: transform .2s ease, opacity .2s ease; }
-.chatshot-lightbox .close:hover { transform: translateY(-1px); opacity:1; }
-
+.main-site-link:hover{ color:var(--brand-700); border-color:var(--brand-700) }
+.main-site-text{ color:#64748b; font-weight:400 }
+.social-icon i{ font-size:1.25rem; color:#475569; transition:color .25s ease }
+.social-icon:hover i{ color:var(--brand-600) }
 </style>
 </head>
-<body class="text-slate-900 antialiased">
-<header class="navbar-mac">
-<div class="navbar-inner">
-<a class="flex items-center gap-3" href="#top">
-<span class="font-semibold tracking-wide text-reveal">MOLOTOV</span>
-</a>
-<nav class="hidden md:flex items-center gap-6 text-sm">
-<a class="nav-link" href="#about">Обо мне</a>
-<a class="nav-link" href="#process">Процесс</a>
-<a class="nav-link" href="#chat">Пример общения</a>
-<a class="nav-link" href="#pricing">Тарифы</a>
-<a class="nav-link" href="#cases">До/после</a>
-<a class="nav-link" href="#faq">FAQ</a>
-</nav>
-<a class="inline-flex items-center justify-center rounded-contact-btn bg-brand-600 px-4 py-2 text-white font-medium hover:bg-brand-700 btn-premium" href="https://t.me/M0L0T0W">
-                Обратная связь
-            </a>
-</div>
-</header>
-<section class="hero-bg text-white hero-container" id="top">
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative">
-<div class="max-w-3xl">
-<h1 class="text-4xl md:text-6xl font-extrabold leading-tight hero-title">
-                    Доведу твоё тело до формы мечты — с гарантией результата и без пустой болтовни
-                </h1>
-<p class="mt-6 text-xl md:text-2xl text-white/90 hero-subtitle">
-                    15+ лет в спорте. Эксперт по анализам, питанию и тренировкам. Работаю по данным, а не по шаблонам.
-                </p>
-<div class="mt-10 flex flex-wrap items-center gap-4">
-<a class="hero-mac-btn" href="https://t.me/M0L0T0W"> Связаться сейчас </a>
-<p class="text-white/70 text-sm">500+ клиентов • средний срок первых видимых результатов — 8-12 недель*</p>
-</div>
-</div>
 
-<div class="hero-socials">
-<a href="https://www.instagram.com/molotov_beast?igsh=MXNoZWhnNjk4M2l1OA==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-<a href="https://t.me/M0L0T0W" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-<a href="https://www.youtube.com/@Molotow13" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-</div>
-</div>
+<body class="text-slate-900 antialiased">
+
+<header class="navbar-mac">
+  <div class="navbar-inner">
+    <a class="flex items-center gap-3" href="#top">
+      <span class="font-semibold tracking-wide text-reveal">MOLOTOV</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm">
+      <a class="nav-link" href="#about">Обо мне</a>
+      <a class="nav-link" href="#process">Процесс</a>
+      <a class="nav-link" href="#cases">До/после</a>
+      <a class="nav-link" href="#chat">Пример общения</a>
+      <a class="nav-link" href="#faq">FAQ</a>
+      <a class="nav-link" href="#pricing">Тарифы</a>
+    </nav>
+    <a class="inline-flex items-center justify-center rounded-contact-btn bg-brand-600 px-4 py-2 text-white font-medium hover:bg-brand-700 btn-premium" href="https://t.me/M0L0T0W">
+      Обратная связь
+    </a>
+  </div>
+</header>
+
+<section class="hero-bg text-white hero-container" id="top">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative">
+    <div class="max-w-3xl">
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight hero-title">
+        Доведу твоё тело до формы мечты — с гарантией результата и без пустой болтовни
+      </h1>
+      <p class="mt-6 text-xl md:text-2xl text-white/90 hero-subtitle">
+        15+ лет в спорте. Эксперт по анализам, питанию и тренировкам. Работаю по данным, а не по шаблонам.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a class="hero-mac-btn" href="https://t.me/M0L0T0W"> Связаться сейчас </a>
+        <p class="text-white/70 text-sm">500+ клиентов • средний срок первых видимых результатов — 8-12 недель*</p>
+      </div>
+    </div>
+
+    <div class="hero-socials">
+      <a href="https://www.instagram.com/molotov_beast?igsh=MXNoZWhnNjk4M2l1OA==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://t.me/M0L0T0W" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://www.youtube.com/@Molotow13" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+    </div>
+  </div>
 </section>
+
 <section class="py-16 md:py-24 bg-white fade-in-section" id="about">
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-<div class="grid lg:grid-cols-2 gap-10 items-center">
-<div>
-<h2 class="text-3xl md:text-4xl font-extrabold">Илья Молотов — эксперт по анализам, питанию и тренировкам</h2>
-<p class="mt-4 text-slate-700">15+ лет в спорте. Работаю по данным, а не по шаблонам. Фокус — безопасность, законность и измеримый прогресс.</p>
-<ul class="mt-6 space-y-3 text-slate-800 text-sm">
-<li class="li-boost" style="animation-delay:.05s">
-<span class="badge"><span class="material-symbols-outlined" style="font-size:18px;line-height:1">check_small</span></span>
-<span class="ml-3"><span class="font-semibold">Сотни клиентов</span> — реальные до/после, измеримый прогресс</span>
-</li>
-<li class="li-boost" style="animation-delay:.1s">
-<span class="badge"><span class="material-symbols-outlined" style="font-size:18px;line-height:1">check_small</span></span>
-<span class="ml-3"><span class="font-semibold">План по анализам</span> — питание и тренировки под биомаркеры</span>
-</li>
-<li class="li-boost" style="animation-delay:.15s">
-<span class="badge"><span class="material-symbols-outlined" style="font-size:18px;line-height:1">check_small</span></span>
-<span class="ml-3"><span class="font-semibold">Корректировки до результата</span> — контроль метрик и связь по графику</span>
-</li>
-</ul>
-<a class="mt-6 inline-flex items-center justify-center rounded-contact-btn bg-brand-600 px-5 py-3 text-white font-semibold hover:bg-brand-700 btn-premium" href="https://t.me/M0L0T0W">Обратная связь</a>
-</div>
-<div class="grid grid-cols-2 gap-4">
-<img alt="Илья Молотов в тренажёрном зале" class="h-64 w-full object-cover img-face rounded-2xl border border-slate-200 floating" loading="lazy" src="images/molotov2.jpg"/>
-<img alt="Илья Молотов — работа с клиентом" class="h-64 w-full object-cover img-face rounded-2xl border border-slate-200 floating" loading="lazy" src="images/molotov3.jpg" style="animation-delay: 1s"/>
-</div>
-</div>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-extrabold">Илья Молотов — эксперт по анализам, питанию и тренировкам</h2>
+        <p class="mt-4 text-slate-700">15+ лет в спорте. Работаю по данным, а не по шаблонам. Фокус — безопасность, законность и измеримый прогресс.</p>
+        <ul class="mt-6 space-y-3 text-slate-800 text-sm">
+          <li class="li-boost" style="animation-delay:.05s">
+            <span class="badge"><span class="material-symbols-outlined" style="font-size:18px;line-height:1">check_small</span></span>
+            <span class="ml-3"><span class="font-semibold">Сотни клиентов</span> — реальные до/после, измеримый прогресс</span>
+          </li>
+          <li class="li-boost" style="animation-delay:.1s">
+            <span class="badge"><span class="material-symbols-outlined" style="font-size:18px;line-height:1">check_small</span></span>
+            <span class="ml-3"><span class="font-semibold">План по анализам</span> — питание и тренировки под биомаркеры</span>
+          </li>
+          <li class="li-boost" style="animation-delay:.15s">
+            <span class="badge"><span class="material-symbols-outlined" style="font-size:18px;line-height:1">check_small</span></span>
+            <span class="ml-3"><span class="font-semibold">Корректировки до результата</span> — контроль метрик и связь по графику</span>
+          </li>
+        </ul>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <img alt="Илья Молотов в тренажёрном зале" class="h-64 w-full object-cover img-face rounded-2xl border border-slate-200 floating" loading="lazy" src="images/molotov2.jpg"/>
+        <img alt="Илья Молотов — работа с клиентом" class="h-64 w-full object-cover img-face rounded-2xl border border-slate-200 floating" loading="lazy" src="images/molotov3.jpg" style="animation-delay: 1s"/>
+      </div>
+    </div>
+  </div>
+    <div id="certs" class="mt-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h3 class="text-2xl md:text-3xl font-extrabold text-gray-900">СЕРТИФИКАТЫ И ОБРАЗОВАНИЕ</h3>
+
+    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      <!-- Сертификат 1 -->
+      <article class="cs-card" data-card>
+        <figure class="cs-media">
+          <img
+            src="images/certificate1.jpg"
+            data-full="images/certificate1.jpg"
+            alt="Сертификат Ильи Молотова — сертификат 1"
+            loading="lazy"
+          />
+          <button class="cs-zoom" type="button" title="Увеличить" aria-label="Открыть сертификат 1">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"></path></svg>
+          </button>
+        </figure>
+        <div class="cs-meta">
+          <div class="cs-title">Колледж фитнеса и бодибилдинга им.Бена Вейдера</div>
+          <div class="cs-sub">21.04.2020</div>
+        </div>
+      </article>
+
+      <!-- Сертификат 2 -->
+      <article class="cs-card" data-card>
+        <figure class="cs-media">
+          <img
+            src="images/certificate2.jpeg"
+            data-full="images/certificate2.jpeg"
+            alt="Сертификат Ильи Молотова — сертификат 2"
+            loading="lazy"
+          />
+          <button class="cs-zoom" type="button" title="Увеличить" aria-label="Открыть сертификат 2">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"></path></svg>
+          </button>
+        </figure>
+        <div class="cs-meta">
+          <div class="cs-title">Body Coach "Эндокринология в нутрициологии и фитнесе"</div>
+          <div class="cs-sub">16.04.2022</div>
+        </div>
+      </article>
+    </div>
+    <a class="mt-6 inline-flex items-center justify-center rounded-contact-btn bg-brand-600 px-5 py-3 text-white font-semibold hover:bg-brand-700 btn-premium" href="https://t.me/M0L0T0W">Обратная связь</a>
+  </div>
 </div>
 </section>
+
 <section id="process" class="process-section text-white py-24">
   <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
     <h2 class="text-center text-4xl md:text-5xl font-extrabold tracking-wide mb-16 uppercase text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-brand-600 to-brand-700">
@@ -357,386 +219,305 @@
     <div class="process-step">
       <div class="step-number">1</div>
       <div class="step-title">Диагностика</div>
-      <div class="step-text">
-        Я отзываюсь на твою заявку и высылаю анкету, чтобы узнать всё необходимое о тебе.
-        Также задаю уточняющие вопросы, чтобы создать максимально эффективный план.
-      </div>
+      <div class="step-text">Я отзываюсь на твою заявку и высылаю анкету, чтобы узнать всё необходимое о тебе. Также задаю уточняющие вопросы, чтобы создать максимально эффективный план.</div>
     </div>
-
     <div class="process-line"></div>
 
     <div class="process-step">
       <div class="step-number">2</div>
       <div class="step-title">План</div>
-      <div class="step-text">
-        Включает питание, тренировки, добавки, анализы и корректировки позирования.
-        Все материалы хранятся в твоей папке на Google Диске, доступной в любое время.
-      </div>
+      <div class="step-text">Включает питание, тренировки, добавки, анализы и корректировки позирования. Все материалы хранятся в твоей папке на Google Диске, доступной в любое время.</div>
     </div>
-
     <div class="process-line"></div>
 
     <div class="process-step">
       <div class="step-number">3</div>
       <div class="step-title">Контроль результата</div>
-      <div class="step-text">
-        Работаешь по плану и сдаёшь отчёт раз в две недели. Я анализирую динамику и
-        отправляю тебе видео-разбор с корректировками.
-      </div>
+      <div class="step-text">Работаешь по плану и сдаёшь отчёт раз в две недели. Я анализирую динамику и отправляю тебе видео-разбор с корректировками.</div>
     </div>
-
     <div class="process-line"></div>
 
     <div class="process-step">
       <div class="step-number">4</div>
       <div class="step-title">Обратная связь</div>
-      <div class="step-text">
-        Я всегда на связи — все вопросы обсуждаем в Telegram. Ты не один в процессе — я рядом до результата.
+      <div class="step-text">Я всегда на связи — все вопросы обсуждаем в Telegram. Ты не один в процессе — я рядом до результата.</div>
+    </div>
+  </div>
+</section>
+
+<section class="transformation-section py-16 md:py-24" id="cases">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-center">РЕЗУЛЬТАТЫ И ОТЗЫВЫ</h2>
+
+    <h3 class="text-2xl font-bold text-center mt-16 mb-6">ФОТО ДО/ПОСЛЕ</h3>
+    <div class="clients-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <div class="compare-card">
+        <div class="before-wrapper">
+          <img class="before-img" src="images/before1.JPEG" alt="До" loading="lazy">
+        </div>
+        <div class="after-wrapper">
+          <img class="before-img" src="images/after1.JPEG" alt="До" loading="lazy">
+        </div>
+        <div class="slider-line"></div>
+        <div class="slider-handle"><span class="slider-icon">↔</span></div>
+        <span class="label before-label">До</span>
+        <span class="label after-label">После</span>
+      </div>
+
+      <div class="compare-card">
+        <div class="before-wrapper">
+          <img class="before-img" src="images/before2.JPEG" alt="До" loading="lazy">
+        </div>
+        <div class="after-wrapper">
+          <img class="before-img" src="images/after2.JPEG" alt="До" loading="lazy">
+        </div>
+        <div class="slider-line"></div>
+        <div class="slider-handle"><span class="slider-icon">↔</span></div>
+        <span class="label before-label">До</span>
+        <span class="label after-label">После</span>
+      </div>
+
+      <div class="compare-card">
+        <div class="before-wrapper">
+          <img class="before-img" src="images/before3.JPEG" alt="До" loading="lazy">
+        </div>
+        <div class="after-wrapper">
+          <img class="before-img" src="images/after3.JPEG" alt="До" loading="lazy">
+        </div>
+        <div class="slider-line"></div>
+        <div class="slider-handle"><span class="slider-icon">↔</span></div>
+        <span class="label before-label">До</span>
+        <span class="label after-label">После</span>
+      </div>
+
+    </div>
+
+    <h3 class="text-2xl font-bold text-center mt-12 mb-6">ОТЗЫВЫ МОИХ КЛИЕНТОВ</h3>
+    <div class="reviews-grid grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+      <article class="cs-card" data-card="">
+        <figure class="cs-media">
+          <img alt="Переписка — консультация" data-full="images/screenshot-1.jpg" loading="lazy" src="images/screenshot-1.jpg"/>
+          <button class="cs-zoom" title="Увеличить" type="button">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"></path></svg>
+          </button>
+        </figure>
+        <div class="cs-meta"><div><div class="cs-title">Консультация и план</div><div class="cs-sub">Согласование условий</div></div></div>
+      </article>
+
+      <article class="cs-card" data-card="">
+        <figure class="cs-media">
+          <img alt="Переписка — питание" data-full="images/screenshot-2.jpg" loading="lazy" src="images/screenshot-2.jpg"/>
+          <button class="cs-zoom" title="Увеличить" type="button">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"></path></svg>
+          </button>
+        </figure>
+        <div class="cs-meta"><div><div class="cs-title">Питание и замены</div><div class="cs-sub">Подбор меню</div></div></div>
+      </article>
+
+      <article class="cs-card" data-card="">
+        <figure class="cs-media">
+          <img alt="Переписка — чекпоинт" data-full="images/screenshot-3.jpg" loading="lazy" src="images/screenshot-3.jpg"/>
+          <button class="cs-zoom" title="Увеличить" type="button">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"></path></svg>
+          </button>
+        </figure>
+        <div class="cs-meta"><div><div class="cs-title">Еженедельный отчёт</div><div class="cs-sub">Фото и корректировки</div></div></div>
+      </article>
+    </div>
+
+    <!-- Десктоп-перетаскивание ползунка -->
+    <script>
+      document.querySelectorAll(".compare-card").forEach(card => {
+        const beforeWrapper = card.querySelector(".before-wrapper");
+        const afterWrapper  = card.querySelector(".after-wrapper");
+        const sliderLine    = card.querySelector(".slider-line");
+        const sliderHandle  = card.querySelector(".slider-handle");
+
+        const update = (x) => {
+          const rect = card.getBoundingClientRect();
+          let off = x - rect.left;
+          if (off < 0) off = 0;
+          if (off > rect.width) off = rect.width;
+          const p = off / rect.width * 100;
+          beforeWrapper.style.width = p + "%";
+          afterWrapper.style.width  = (100 - p) + "%";
+          sliderLine.style.left     = p + "%";
+          sliderHandle.style.left   = p + "%";
+        };
+
+        let drag = false;
+        card.addEventListener("mousedown", e => { drag = true; update(e.clientX); });
+        window.addEventListener("mouseup", () => drag = false);
+        window.addEventListener("mousemove", e => { if (drag) update(e.clientX); });
+
+        card.addEventListener("touchstart", e => { drag = true; update(e.touches[0].clientX); }, {passive:true});
+        window.addEventListener("touchend", () => drag = false);
+        window.addEventListener("touchmove", e => { if (drag) update(e.touches[0].clientX); }, {passive:true});
+      });
+    </script>
+  </div>
+</section>
+
+<section class="chat-section py-16 md:py-24" id="chat">
+  <div class="chat-container">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-center">Как выглядит наше общение</h2>
+    <p class="text-center text-slate-600 mt-3">Реальный диалог с клиентом на первом этапе работы</p>
+    <div class="mt-12 bg-white rounded-2xl p-6 border border-slate-200">
+      <div class="space-y-6">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0 flex items-center justify-center overflow-hidden chat-avatar">
+            <span class="font-semibold text-slate-600">А</span>
+          </div>
+          <div class="bg-slate-100 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
+            <p class="font-medium">Алексей</p>
+            <p class="mt-1 text-slate-700">Привет, Илья! Хочу сбросить 15 кг, но не знаю с чего начать. Анализы в норме, кроме немного повышенного кортизола.</p>
+            <span class="text-xs text-slate-400 block mt-2">10:15</span>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 justify-end">
+          <div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
+            <p class="font-medium">Илья Молотов</p>
+            <p class="mt-1">Привет! Кортизол — важный маркер. Пришли полные анализы и фото в анфас/профиль. Посмотрю твой метаболизм и составлю план питания с дефицитом, но без стресса для организма.</p>
+            <span class="text-xs text-slate-200 block mt-2">10:18</span>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white flex-shrink-0 chat-avatar"> ИМ </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0 flex items-center justify-center overflow-hidden chat-avatar">
+            <span class="font-semibold text-slate-600">А</span>
+          </div>
+          <div class="bg-slate-100 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
+            <p class="font-medium">Алексей</p>
+            <p class="mt-1 text-slate-700">Отправил. Тренируюсь 3 раза в неделю, но питание не контролирую. Сколько по времени займет достижение цели?</p>
+            <span class="text-xs text-slate-400 block mt-2">10:22</span>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 justify-end">
+          <div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
+            <p class="font-medium">Илья Молотов</p>
+            <p class="mt-1">При грамотном дефиците и тренировках — около 16 недель. Сохраним мышечную массу. Через 2 недели уже увидишь первые изменения. Выбери тариф, и начнем!</p>
+            <span class="text-xs text-slate-200 block mt-2">10:25</span>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white flex-shrink-0 chat-avatar"> ИМ </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0 flex items-center justify-center overflow-hidden chat-avatar">
+            <span class="font-semibold text-slate-600">А</span>
+          </div>
+          <div class="bg-slate-100 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
+            <p class="font-medium">Алексей</p>
+            <p class="mt-1 text-slate-700">Спасибо за быстрый ответ! А как часто нужно будет сдавать анализы в процессе?</p>
+            <span class="text-xs text-slate-400 block mt-2">10:28</span>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 justify-end">
+          <div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
+            <p class="font-medium">Илья Молотов</p>
+            <p class="mt-1">Обычно контрольные анализы сдаем каждые 4-6 недель, чтобы отслеживать динамику и корректировать план при необходимости. Это позволяет избежать плато и поддерживать прогресс.</p>
+            <span class="text-xs text-slate-200 block mt-2">10:30</span>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white flex-shrink-0 chat-avatar"> ИМ </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0 flex items-center justify-center overflow-hidden chat-avatar">
+            <span class="font-semibold text-slate-600">А</span>
+          </div>
+          <div class="bg-slate-100 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
+            <p class="font-medium">Алексей</p>
+            <p class="mt-1 text-slate-700">Понятно. А если у меня будут вопросы в процессе, как быстро ты отвечаешь?</p>
+            <span class="text-xs text-slate-400 block mt-2">10:32</span>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 justify-end">
+          <div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
+            <p class="font-medium">Илья Молотов</p>
+            <div class="voice-message">
+              <div class="voice-player">
+                <div class="play-btn" onclick="toggleVoice(this)">
+                  <i class="fas fa-play" style="font-size: 12px; margin-left: 2px;"></i>
+                </div>
+                <div class="voice-bars">
+                  <div class="voice-bar" style="height: 6px;"></div>
+                  <div class="voice-bar" style="height: 12px;"></div>
+                  <div class="voice-bar" style="height: 18px;"></div>
+                  <div class="voice-bar" style="height: 14px;"></div>
+                  <div class="voice-bar" style="height: 10px;"></div>
+                  <div class="voice-bar" style="height: 16px;"></div>
+                  <div class="voice-bar" style="height: 8px;"></div>
+                  <div class="voice-bar" style="height: 12px;"></div>
+                  <div class="voice-bar" style="height: 18px;"></div>
+                  <div class="voice-bar" style="height: 14px;"></div>
+                  <div class="voice-bar" style="height: 10px;"></div>
+                  <div class="voice-bar" style="height: 16px;"></div>
+                  <div class="voice-bar" style="height: 8px;"></div>
+                  <div class="voice-bar" style="height: 12px;"></div>
+                  <div class="voice-bar" style="height: 6px;"></div>
+                </div>
+                <div class="voice-duration">0:24</div>
+              </div>
+            </div>
+            <span class="text-xs text-slate-200 block mt-2">10:35</span>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white flex-shrink-0 chat-avatar"> ИМ </div>
+        </div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <a class="inline-flex items-center justify-center rounded-contact-btn bg-brand-600 px-5 py-3 text-white font-semibold hover:bg-brand-700 btn-premium" href="https://t.me/M0L0T0W">
+          Начать свой диалог с Ильей
+        </a>
       </div>
     </div>
   </div>
 </section>
 
-
-<section class="transformation-section py-16 md:py-24" id="cases">
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-<h2 class="text-3xl md:text-4xl font-extrabold text-center">РЕЗУЛЬТАТЫ И ОТЗЫВЫ</h2>
-
-
-<h3 class="text-2xl font-bold text-center mt-16 mb-6">ФОТО ДО/ПОСЛЕ</h3>
-<div class="clients-grid grid grid-cols-1 md:grid-cols-3 gap-6">
-
-<div class="compare-card">
-<div class="before-wrapper">
-<img alt="До" class="before-img" draggable="false" src="images/before1.jpeg"/>
-</div>
-<div class="after-wrapper">
-<img alt="После" class="after-img" draggable="false" src="images/after1.jpeg"/>
-</div>
-<div class="slider-line">
-<div class="slider-handle">
-<span class="slider-icon">↔</span>
-</div>
-</div>
-<span class="label before-label">До</span>
-<span class="label after-label">После</span>
-</div>
-
-<div class="compare-card">
-<div class="before-wrapper">
-<img alt="До" class="before-img" draggable="false" src="images/before2.jpeg"/>
-</div>
-<div class="after-wrapper">
-<img alt="После" class="after-img" draggable="false" src="images/after2.jpeg"/>
-</div>
-<div class="slider-line">
-<div class="slider-handle">
-<span class="slider-icon">↔</span>
-</div>
-</div>
-<span class="label before-label">До</span>
-<span class="label after-label">После</span>
-</div>
-
-<div class="compare-card">
-<div class="before-wrapper">
-<img alt="До" class="before-img" draggable="false" src="images/before3.jpeg"/>
-</div>
-<div class="after-wrapper">
-<img alt="После" class="after-img" draggable="false" src="images/after3.jpeg"/>
-</div>
-<div class="slider-line">
-<div class="slider-handle">
-<span class="slider-icon">↔</span>
-</div>
-</div>
-<span class="label before-label">До</span>
-<span class="label after-label">После</span>
-</div>
-</div>
-
-
-<h3 class="text-2xl font-bold text-center mt-12 mb-6">ОТЗЫВЫ МОИХ КЛИЕНТОВ</h3>
-<div class="reviews-grid grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-<article class="cs-card" data-card="">
-<figure class="cs-media">
-<img alt="Переписка — консультация" data-full="images/screenshot-1.jpg" loading="lazy" src="images/screenshot-1.jpg"/>
-<button class="cs-zoom" title="Увеличить" type="button">
-<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"></path></svg>
-</button>
-</figure>
-<div class="cs-meta"><div><div class="cs-title">Консультация и план</div><div class="cs-sub">Согласование условий</div></div></div>
-</article>
-<article class="cs-card" data-card="">
-<figure class="cs-media">
-<img alt="Переписка — питание" data-full="images/screenshot-2.jpg" loading="lazy" src="images/screenshot-2.jpg"/>
-<button class="cs-zoom" title="Увеличить" type="button">
-<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"></path></svg>
-</button>
-</figure>
-<div class="cs-meta"><div><div class="cs-title">Питание и замены</div><div class="cs-sub">Подбор меню</div></div></div>
-</article>
-<article class="cs-card" data-card="">
-<figure class="cs-media">
-<img alt="Переписка — чекпоинт" data-full="images/screenshot-3.jpg" loading="lazy" src="images/screenshot-3.jpg"/>
-<button class="cs-zoom" title="Увеличить" type="button">
-<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"></path></svg>
-</button>
-</figure>
-<div class="cs-meta"><div><div class="cs-title">Еженедельный отчёт</div><div class="cs-sub">Фото и корректировки</div></div></div>
-</article>
-</div>
-<script>
-document.querySelectorAll(".compare-card").forEach(card => {
-  const beforeWrapper = card.querySelector(".before-wrapper");
-  const afterWrapper = card.querySelector(".after-wrapper");
-  const sliderLine = card.querySelector(".slider-line");
-  const sliderHandle = card.querySelector(".slider-handle");
-
-  const updateSlider = (x) => {
-    const rect = card.getBoundingClientRect();
-    let offset = x - rect.left;
-    if (offset < 0) offset = 0;
-    if (offset > rect.width) offset = rect.width;
-
-    const percent = (offset / rect.width) * 100;
-
-    beforeWrapper.style.width = `${percent}%`;
-    afterWrapper.style.width = `${100 - percent}%`;
-    sliderLine.style.left = `${percent}%`;
-    sliderHandle.style.left = `${percent}%`;
-  };
-
-  let isDragging = false;
-
-  card.addEventListener("mousedown", e => { 
-    isDragging = true; 
-    updateSlider(e.clientX); 
-  });
-  window.addEventListener("mouseup", () => { isDragging = false; });
-  window.addEventListener("mousemove", e => { if (isDragging) updateSlider(e.clientX); });
-
-  
-  card.addEventListener("touchstart", e => { 
-    isDragging = true; 
-    updateSlider(e.touches[0].clientX); 
-  });
-  window.addEventListener("touchend", () => { isDragging = false; });
-  window.addEventListener("touchmove", e => { if (isDragging) updateSlider(e.touches[0].clientX); });
-});
-</script>
-</div></section>
-<style>
-
-.reviews-grid:hover .review-card:not(:hover) .review-img {
-  filter: blur(6px) brightness(0.7);
-  transform: scale(1.3);
-  transition: filter 0.5s ease, transform 0.5s ease;
-}
-
-.review-card:hover .review-img {
-  transform: scale(1);
-  transition: transform 0.5s ease;
-}
-
-
-.clients-grid {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.client-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 1rem;
-  display: flex;
-}
-
-.client-card img {
-  transition: none; 
-}
-</style>
-
-<section class="chat-section py-16 md:py-24" id="chat">
-<div class="chat-container">
-<h2 class="text-3xl md:text-4xl font-extrabold text-center">Как выглядит наше общение</h2>
-<p class="text-center text-slate-600 mt-3">Реальный диалог с клиентом на первом этапе работы</p>
-<div class="mt-12 bg-white rounded-2xl p-6 border border-slate-200">
-<div class="space-y-6">
-<div class="flex items-start gap-3">
-<div class="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0 flex items-center justify-center overflow-hidden chat-avatar">
-<span class="font-semibold text-slate-600">А</span>
-</div>
-<div class="bg-slate-100 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
-<p class="font-medium">Алексей</p>
-<p class="mt-1 text-slate-700">Привет, Илья! Хочу сбросить 15 кг, но не знаю с чего начать. Анализы в норме, кроме немного повышенного кортизола.</p>
-<span class="text-xs text-slate-400 block mt-2">10:15</span>
-</div>
-</div>
-
-<div class="flex items-start gap-3 justify-end">
-<div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
-<p class="font-medium">Илья Молотов</p>
-<p class="mt-1">Привет! Кортизол — важный маркер. Пришли полные анализы и фото в анфас/профиль. Посмотрю твой метаболизм и составлю план питания с дефицитом, но без стресса для организма.</p>
-<span class="text-xs text-slate-200 block mt-2">10:18</span>
-</div>
-<div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white flex-shrink-0 chat-avatar"> ИМ </div>
-</div>
-
-<div class="flex items-start gap-3">
-<div class="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0 flex items-center justify-center overflow-hidden chat-avatar">
-<span class="font-semibold text-slate-600">А</span>
-</div>
-<div class="bg-slate-100 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
-<p class="font-medium">Алексей</p>
-<p class="mt-1 text-slate-700">Отправил. Тренируюсь 3 раза в неделю, но питание не контролирую. Сколько по времени займет достижение цели?</p>
-<span class="text-xs text-slate-400 block mt-2">10:22</span>
-</div>
-</div>
-
-<div class="flex items-start gap-3 justify-end">
-<div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
-<p class="font-medium">Илья Молотов</p>
-<p class="mt-1">При грамотном дефиците и тренировках — около 16 недель. Сохраним мышечную массу. Через 2 недели уже увидишь первые изменения. Выбери тариф, и начнем!</p>
-<span class="text-xs text-slate-200 block mt-2">10:25</span>
-</div>
-<div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white flex-shrink-0 chat-avatar"> ИМ </div>
-</div>
-<div class="flex items-start gap-3">
-<div class="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0 flex items-center justify-center overflow-hidden chat-avatar">
-<span class="font-semibold text-slate-600">А</span>
-</div>
-<div class="bg-slate-100 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
-<p class="font-medium">Алексей</p>
-<p class="mt-1 text-slate-700">Спасибо за быстрый ответ! А как часто нужно будет сдавать анализы в процессе?</p>
-<span class="text-xs text-slate-400 block mt-2">10:28</span>
-</div>
-</div>
-<div class="flex items-start gap-3 justify-end">
-<div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
-<p class="font-medium">Илья Молотов</p>
-<p class="mt-1">Обычно контрольные анализы сдаем каждые 4-6 недель, чтобы отслеживать динамику и корректировать план при необходимости. Это позволяет избежать плато и поддерживать прогресс.</p>
-<span class="text-xs text-slate-200 block mt-2">10:30</span>
-</div>
-<div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white flex-shrink-0 chat-avatar"> ИМ </div>
-</div>
-<div class="flex items-start gap-3">
-<div class="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0 flex items-center justify-center overflow-hidden chat-avatar">
-<span class="font-semibold text-slate-600">А</span>
-</div>
-<div class="bg-slate-100 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
-<p class="font-medium">Алексей</p>
-<p class="mt-1 text-slate-700">Понятно. А если у меня будут вопросы в процессе, как быстро ты отвечаешь?</p>
-<span class="text-xs text-slate-400 block mt-2">10:32</span>
-</div>
-</div>
-<div class="flex items-start gap-3 justify-end">
-<div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-sm max-w-[80%] chat-message">
-<p class="font-medium">Илья Молотов</p>
-
-<div class="voice-message">
-<div class="voice-player">
-<div class="play-btn" onclick="toggleVoice(this)">
-<i class="fas fa-play" style="font-size: 12px; margin-left: 2px;"></i>
-</div>
-<div class="voice-bars">
-<div class="voice-bar" style="height: 6px;"></div>
-<div class="voice-bar" style="height: 12px;"></div>
-<div class="voice-bar" style="height: 18px;"></div>
-<div class="voice-bar" style="height: 14px;"></div>
-<div class="voice-bar" style="height: 10px;"></div>
-<div class="voice-bar" style="height: 16px;"></div>
-<div class="voice-bar" style="height: 8px;"></div>
-<div class="voice-bar" style="height: 12px;"></div>
-<div class="voice-bar" style="height: 18px;"></div>
-<div class="voice-bar" style="height: 14px;"></div>
-<div class="voice-bar" style="height: 10px;"></div>
-<div class="voice-bar" style="height: 16px;"></div>
-<div class="voice-bar" style="height: 8px;"></div>
-<div class="voice-bar" style="height: 12px;"></div>
-<div class="voice-bar" style="height: 6px;"></div>
-</div>
-<div class="voice-duration">0:24</div>
-</div>
-</div>
-<span class="text-xs text-slate-200 block mt-2">10:35</span>
-</div>
-<div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white flex-shrink-0 chat-avatar"> ИМ </div>
-</div>
-</div>
-<div class="mt-8 text-center">
-<a class="inline-flex items-center justify-center rounded-contact-btn bg-brand-600 px-5 py-3 text-white font-semibold hover:bg-brand-700 btn-premium" href="https://t.me/M0L0T0W">
-                        Начать свой диалог с Ильей
-                    </a>
-</div>
-</div>
-</div>
-</section>
 <section class="py-16 md:py-24 faq-section" id="faq">
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-<h2 class="text-3xl md:text-4xl font-extrabold text-center">FAQ</h2>
-<p class="text-center text-slate-600 mt-3">Часто задаваемые вопросы</p>
-<div class="mt-12 faq-grid">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-center">FAQ</h2>
+    <p class="text-center text-slate-600 mt-3">Часто задаваемые вопросы</p>
 
-<div class="faq-column">
-<div class="faq-item">
-<div class="rounded-2xl faq-card p-6 border border-slate-200 bg-white">
-<div class="font-semibold text-lg faq-question" data-target="faq-1">
-                                Сколько времени нужно, чтобы увидеть результаты?
-                                <span class="faq-arrow"></span>
-</div>
-<div class="faq-content" id="faq-1">
-<div class="mt-4 text-slate-600">
-                                    Первые видиме результаты обычно появляются через 8-12 недель, в зависимости от исходных данных, соблюдения плана и индивидуальных особенностей организма. Мы фокусируемся на устойчивом прогрессе, а не на быстрых, но краткосрочных изменениях.
-                                </div>
-</div>
-</div>
-</div>
-<div class="faq-item">
-<div class="rounded-2xl faq-card p-6 border border-slate-200 bg-white">
-<div class="font-semibold text-lg faq-question" data-target="faq-3">
-                                Что если я новичок в спорте?
-                                <span class="faq-arrow"></span>
-</div>
-<div class="faq-content" id="faq-3">
-<div class="mt-4 text-slate-600">
-                                    Планы адаптированы для любого уровня подготовки. Мы начинаем с базовых упражнений и постепенно повышаем нагрузку под контролем. Для новичков особенно важен правильный подход к технике выполнения упражнений, чтобы избежать травм и заложить прочную основу для будущего прогресса.
-                                </div>
-</div>
-</div>
-</div>
-</div>
+    <div class="mt-12 faq-grid">
+      <div class="faq-column">
+        <div class="faq-item">
+          <div class="rounded-2xl faq-card p-6 border border-slate-200 bg-white">
+            <div class="font-semibold text-lg faq-question" data-target="faq-1">Сколько времени нужно, чтобы увидеть результаты? <span class="faq-arrow"></span></div>
+            <div class="faq-content" id="faq-1"><div class="mt-4 text-slate-600">Первые видиме результаты обычно появляются через 8-12 недель, в зависимости от исходных данных, соблюдения плана и индивидуальных особенностей организма. Мы фокусируемся на устойчивом прогрессе, а не на быстрых, но краткосрочных изменениях.</div></div>
+          </div>
+        </div>
 
-<div class="faq-column">
-<div class="faq-item">
-<div class="rounded-2xl faq-card p-6 border border-slate-200 bg-white">
-<div class="font-semibold text-lg faq-question" data-target="faq-2">
-                                Нужны ли анализы крови?
-                                <span class="faq-arrow"></span>
-</div>
-<div class="faq-content" id="faq-2">
-<div class="mt-4 text-slate-600">
-                                    Да, анализы обязательны для создания индивидуального плана. Они помогают учесть биомаркеры и избежать рисков для здоровья. Мы анализируем показатели гормонов, витаминов, минералов и других важных параметров, чтобы разработать оптимальную программу, которая будет эффективной и безопасной именно для вас.
-                                </div>
-</div>
-</div>
-</div>
-<div class="faq-item">
-<div class="rounded-2xl faq-card p-6 border border-slate-200 bg-white">
-<div class="font-semibold text-lg faq-question" data-target="faq-4">
-                                Есть ли гарантия возврата?
-                                <span class="faq-arrow"></span>
-</div>
-<div class="faq-content" id="faq-4">
-<div class="mt-4 text-slate-600">
-                                    Да, условия возврата фиксируются в договоре оферта. Если нет прогресса при соблюдении плана, обсуждаем варианты. Мы уверены в эффективности нашего подхода, поэтому предлагаем прозрачные условия и готовы вернуть средств, если не сможем помочь достичь заявленных результатов.
-                                </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+        <div class="faq-item">
+          <div class="rounded-2xl faq-card p-6 border border-slate-200 bg-white">
+            <div class="font-semibold text-lg faq-question" data-target="faq-3">Что если я новичок в спорте? <span class="faq-arrow"></span></div>
+            <div class="faq-content" id="faq-3"><div class="mt-4 text-slate-600">Планы адаптированы для любого уровня подготовки. Мы начинаем с базовых упражнений и постепенно повышаем нагрузку под контролем. Для новичков особенно важен правильный подход к технике выполнения упражнений, чтобы избежать травм и заложить прочную основу для будущего прогресса.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-column">
+        <div class="faq-item">
+          <div class="rounded-2xl faq-card p-6 border border-slate-200 bg-white">
+            <div class="font-semibold text-lg faq-question" data-target="faq-2">Нужны ли анализы крови? <span class="faq-arrow"></span></div>
+            <div class="faq-content" id="faq-2"><div class="mt-4 text-slate-600">Да, анализы обязательны для создания индивидуального плана. Они помогают учесть биомаркеры и избежать рисков для здоровья. Мы анализируем показатели гормонов, витаминов, минералов и других важных параметров, чтобы разработать оптимальную программу, которая будет эффективной и безопасной именно для вас.</div></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="rounded-2xl faq-card p-6 border border-slate-200 bg-white">
+            <div class="font-semibold text-lg faq-question" data-target="faq-4">Есть ли гарантия возврата? <span class="faq-arrow"></span></div>
+            <div class="faq-content" id="faq-4"><div class="mt-4 text-slate-600">Да, условия возврата фиксируются в договоре оферта. Если нет прогресса при соблюдении плана, обсуждаем варианты. Мы уверены в эффективности нашего подхода, поэтому предлагаем прозрачные условия и готовы вернуть средств, если не сможем помочь достичь заявленных результатов.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="pricing-section" id="pricing">
@@ -773,60 +554,32 @@ document.querySelectorAll(".compare-card").forEach(card => {
   </div>
 </section>
 
-<div id="modal-start" class="modal">
-  <div class="modal-content">
-    <button class="btn-close">×</button>
-    <div class="modal-image"></div>
-    <div class="modal-body"></div>
-  </div>
-</div>
-
-<div id="modal-breakthrough" class="modal">
-  <div class="modal-content">
-    <button class="btn-close">×</button>
-    <div class="modal-image"></div>
-    <div class="modal-body"></div>
-  </div>
-</div>
-
-<div id="modal-premium" class="modal">
-  <div class="modal-content">
-    <button class="btn-close">×</button>
-    <div class="modal-image"></div>
-    <div class="modal-body"></div>
-  </div>
-</div>
+<div id="modal-start" class="modal"><div class="modal-content"><button class="btn-close">×</button><div class="modal-image"></div><div class="modal-body"></div></div></div>
+<div id="modal-breakthrough" class="modal"><div class="modal-content"><button class="btn-close">×</button><div class="modal-image"></div><div class="modal-body"></div></div></div>
+<div id="modal-premium" class="modal"><div class="modal-content"><button class="btn-close">×</button><div class="modal-image"></div><div class="modal-body"></div></div></div>
 
 <footer class="bg-white border-t border-slate-200">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-      
       <div class="flex flex-col gap-3 max-w-sm">
         <span class="font-semibold tracking-wide text-slate-900 text-lg">MOLOTOV</span>
-        <p class="text-sm text-slate-600 leading-snug">
-          Профессиональные планы питания и тренировок по анализам
-        </p>
+        <p class="text-sm text-slate-600 leading-snug">Профессиональные планы питания и тренировок по анализам</p>
         <a href="https://themirk.ru" target="_blank" class="main-site-link inline-block mt-1">
-          themirk.ru <span class="main-site-text">— основной сайт</span>
+          themirk.ru <span class="main-site-text">— ссылка на основной сайт</span>
         </a>
       </div>
 
       <div class="text-sm text-slate-500 max-w-2xl leading-relaxed">
-        Отказ от ответственности: сайт носит информационный характер. Не даёт медицинских рекомендаций. Любые фармакологические решения принимаются только по назначению врача в соответствии с законодательством вашей страны.
+        Отказ от ответственности: сайт носит информационный характер. Не даёт медицинских рекомендаций.
+        Любые фармакологические решения принимаются только по назначению врача в соответствии с
+        законодательством вашей страны.
       </div>
 
       <div class="flex items-center gap-4">
-        <a class="social-icon" href="https://www.instagram.com/molotov_beast?igsh=MXNoZWhnNjk4M2l1OA==" target="_blank">
-          <i class="fa-brands fa-instagram"></i>
-        </a>
-        <a class="social-icon" href="https://t.me/M0L0T0W" target="_blank">
-          <i class="fa-brands fa-telegram"></i>
-        </a>
-        <a class="social-icon" href="https://www.youtube.com/@Molotow13" target="_blank">
-          <i class="fa-brands fa-youtube"></i>
-        </a>
+        <a class="social-icon" href="https://www.instagram.com/molotov_beast?igsh=MXNoZWhnNjk4M2l1OA==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+        <a class="social-icon" href="https://t.me/M0L0T0W" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+        <a class="social-icon" href="https://www.youtube.com/@Molotow13" target="_blank"><i class="fa-brands fa-youtube"></i></a>
       </div>
-
     </div>
 
     <div class="mt-8 text-xs text-slate-400 text-center border-t border-slate-100 pt-4">
@@ -836,9 +589,7 @@ document.querySelectorAll(".compare-card").forEach(card => {
 </footer>
 
 <div class="float-wrapper">
-  <a href="https://t.me/M0L0T0W" target="_blank" class="float-btn" aria-label="Написать в Telegram">
-    <i class="fa-brands fa-telegram"></i>
-  </a>
+  <a href="https://t.me/M0L0T0W" target="_blank" class="float-btn" aria-label="Написать в Telegram"><i class="fa-brands fa-telegram"></i></a>
   <div class="float-tip">Нужна консультация? Пиши!</div>
 </div>
 
@@ -848,357 +599,149 @@ document.querySelectorAll(".compare-card").forEach(card => {
 <script src="js/pricing.js"></script>
 <script src="js/transformation.js"></script>
 
-<style>
-.main-site-link {
-  color: var(--brand-600);
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.25s ease;
-}
-
-.main-site-link:hover {
-  color: var(--brand-700);
-}
-
-.main-site-text {
-  color: #64748b;
-  font-weight: 400;
-}
-
-.social-icon i {
-  font-size: 2rem;
-  color: #475569;
-  transition: color 0.25s ease;
-}
-
-.social-icon:hover i {
-  color: var(--brand-600);
-}
-</style>
-
-
-
-
+<!-- Отмена нативных валидаций + кнопка-ошибка -->
 <script>
 (function(){
-  try { document.addEventListener('invalid', function(e){ e.preventDefault(); }, true); } catch(e){}
+  try{document.addEventListener('invalid',e=>e.preventDefault(),true);}catch(e){}
   ['HTMLInputElement','HTMLSelectElement','HTMLTextAreaElement','HTMLFormElement'].forEach(function(k){
-    try { var p = window[k] && window[k].prototype; if (p && p.reportValidity) p.reportValidity = function(){ return true; }; } catch(e){}
+    try{var p=window[k]&&window[k].prototype; if(p&&p.reportValidity) p.reportValidity=function(){return true};}catch(e){}
   });
-
-  var form = document.getElementById('lead-form');
-  if (!form) {
-    var btnCandidate = document.getElementById('submit-button') ||
-      (function(){
-        var found = null;
-        Array.prototype.slice.call(document.querySelectorAll('button[type="submit"], .btn-submit')).forEach(function(b){
-          var t = (b.textContent || b.value || '').replace(/\s+/g,' ').trim();
-          if (!found && /Обратная\s+связь/i.test(t)) found = b;
-        });
-        return found;
-      })();
-    if (btnCandidate) form = btnCandidate.closest('form');
-    if (!form) form = document.querySelector('form');
+  var form=document.getElementById('lead-form');
+  if(!form){
+    var btnCandidate=document.getElementById('submit-button')||(function(){
+      var found=null;
+      Array.prototype.slice.call(document.querySelectorAll('button[type="submit"], .btn-submit')).forEach(function(b){
+        var t=(b.textContent||b.value||'').replace(/\s+/g,' ').trim();
+        if(!found && /Обратная\s+связь/i.test(t)) found=b;
+      });
+      return found;
+    })();
+    if(btnCandidate) form=btnCandidate.closest('form');
+    if(!form) form=document.querySelector('form');
   }
-  if (!form) return;
+  if(!form) return;
 
-  try { form.removeAttribute('onsubmit'); } catch(e){}
-  form.setAttribute('novalidate','novalidate');
-  form.noValidate = true;
+  try{form.removeAttribute('onsubmit');}catch(e){}
+  form.setAttribute('novalidate','novalidate'); form.noValidate=true;
 
-  var btn = document.getElementById('submit-button') || form.querySelector('.btn-submit, button[type="submit"]');
-  if (!btn) return;
-
-  var originalText = (btn.textContent || btn.value || '').trim();
+  var btn=document.getElementById('submit-button')||form.querySelector('.btn-submit, button[type="submit"]');
+  if(!btn) return;
+  var originalText=(btn.textContent||btn.value||'').trim();
 
   function hasMissingRequired(){
-    var controls = Array.prototype.slice.call(form.querySelectorAll('input, select, textarea'));
-    for (var i=0;i<controls.length;i++){
-      var el = controls[i];
-      if (!el.required) continue;
-      if (el.type === 'checkbox' || el.type === 'radio') {
-        if (!el.checked) return true;
-      } else {
-        if (!String(el.value || '').trim()) return true;
-      }
+    var controls=Array.prototype.slice.call(form.querySelectorAll('input, select, textarea'));
+    for(var i=0;i<controls.length;i++){
+      var el=controls[i]; if(!el.required) continue;
+      if(el.type==='checkbox'||el.type==='radio'){ if(!el.checked) return true; }
+      else { if(!String(el.value||'').trim()) return true; }
     }
     return false;
   }
-
   function showButtonError(){
-    btn.classList.remove('btn-sent');
-    btn.classList.add('btn-error');
-    if (btn.tagName.toLowerCase() === 'input') btn.value = 'Заполните обязательные поля';
-    else btn.textContent = 'Заполните обязательные поля';
-    btn.disabled = true;
+    btn.classList.remove('btn-sent'); btn.classList.add('btn-error');
+    if(btn.tagName.toLowerCase()==='input') btn.value='Заполните обязательные поля';
+    else btn.textContent='Заполните обязательные поля';
+    btn.disabled=true;
     setTimeout(function(){
       btn.classList.remove('btn-error');
-      if (btn.tagName.toLowerCase() === 'input') btn.value = originalText;
-      else btn.textContent = originalText;
-      btn.disabled = false;
-    }, 1800);
+      if(btn.tagName.toLowerCase()==='input') btn.value=originalText; else btn.textContent=originalText;
+      btn.disabled=false;
+    },1800);
   }
-
   form.addEventListener('submit', async function(e){
     e.preventDefault();
-    if (hasMissingRequired() || (form.checkValidity && !form.checkValidity())) {
-      showButtonError();
-      return false;
-    }
-    btn.classList.add('btn-sent');
-    btn.disabled = true;
-    try {
-      if (typeof window.submitLead === 'function') {
-        await window.submitLead(e);
-      } else {
-        form.submit();
-      }
-    } finally {
-      setTimeout(function(){
-        btn.classList.remove('btn-sent');
-        btn.disabled = false;
-      }, 1200);
-    }
+    if(hasMissingRequired() || (form.checkValidity && !form.checkValidity())){ showButtonError(); return false; }
+    btn.classList.add('btn-sent'); btn.disabled=true;
+    try{ if(typeof window.submitLead==='function'){ await window.submitLead(e); } else { form.submit(); } }
+    finally{ setTimeout(function(){ btn.classList.remove('btn-sent'); btn.disabled=false; },1200); }
   }, true);
 })();
 </script>
 
+<!-- Мобильный слайдер для блока клиентов -->
 <script>
-(function(){
-  function getSectionByHeading(text){
-    var nodes = Array.prototype.slice.call(document.querySelectorAll('h1,h2,h3,h4'));
-    for (var i=0;i<nodes.length;i++){
-      var t = (nodes[i].textContent || '').toLowerCase();
-      if (t.indexOf(text) !== -1) return nodes[i].closest('section') || nodes[i].parentElement;
-    }
-    return null;
-  }
-  function cleanupEmpty(root){
-    Array.prototype.slice.call(root.children).forEach(function(n){
-      if (n.classList && (n.classList.contains('chatshots-grid'))) return;
-      if (/^H[1-6]$/.test(n.tagName)) return;
-      var hasImg = !!(n.querySelector && n.querySelector('img'));
-      var txt = (n.textContent||'').trim();
-      if (!hasImg && !txt) n.remove();
-    });
-  }
-  function initChatshots(){
-    var root = document.querySelector('[data-chatshots], #chatshots, .chatshots-root');
-    if (!root) return;
-    var grid = root.querySelector('.chatshots-grid');
-    if (!grid){
-      grid = document.createElement('div');
-      grid.className = 'chatshots-grid';
-      var h = root.querySelector('h1,h2,h3,h4');
-      if (h && h.nextSibling) h.parentNode.insertBefore(grid, h.nextSibling);
-      else root.appendChild(grid);
-    }
-    if (grid.querySelector('.chatshot-card')) return;
+/* Mobile slider for .clients-grid: wraps cards into a track on <=768px
+   and restores grid back on >768px */
+(function () {
+  const BP = 768;
+  let active = false;
+  let cleanup = null;
 
-    var inside = Array.prototype.slice.call(root.querySelectorAll('img'));
-    var pool = inside.slice();
+  function init() {
+    const isMobile = window.matchMedia(`(max-width:${BP}px)`).matches;
+    const grid = document.querySelector(".clients-grid");
+    if (!grid) return;
 
-    if (pool.length < 3){
-      var maybe = getSectionByHeading('сомневаешься');
-      if (maybe){
-        var imgs = Array.prototype.slice.call(maybe.querySelectorAll('img'));
-        imgs.forEach(function(img){
-          var w = img.naturalWidth || img.width || 0;
-          var h = img.naturalHeight || img.height || 0;
-          var ratio = h && w ? (h/w) : 0;
-          var src = (img.getAttribute('src')||'').toLowerCase();
-          var isChatName = /(chat|screen|screenshot|review|otzyv|перепис|whatsapp|telegram)/.test(src);
-          if (ratio >= 1.45 || isChatName) pool.push(img);
-        });
+    if (isMobile && !active) {
+      // убираем tailwind-сетку, чтобы она не ломала слайдер
+      grid.classList.remove("grid", "grid-cols-1", "md:grid-cols-3", "gap-6");
+
+      const cards = Array.from(grid.querySelectorAll(".compare-card"));
+      if (cards.length < 2) return;
+
+      // создаём трек и переносим карточки внутрь
+      const track = document.createElement("div");
+      track.className = "mobile-slider-track";
+      cards.forEach((c) => track.appendChild(c));
+      grid.appendChild(track);
+
+      // стрелки
+      const prev = document.createElement("button");
+      const next = document.createElement("button");
+      prev.className = "t-c-prev";
+      next.className = "t-c-next";
+      prev.setAttribute("aria-label", "Предыдущий");
+      next.setAttribute("aria-label", "Следующий");
+      prev.textContent = "‹";
+      next.textContent = "›";
+      grid.appendChild(prev);
+      grid.appendChild(next);
+
+      // логика перелистывания
+      let index = 0,
+        n = cards.length,
+        startX = 0;
+      function go(i) {
+        index = (i + n) % n;
+        track.style.transform = `translateX(-${index * 100}%)`;
       }
-    }
-    var used = new Set();
-    var pick = [];
-    for (var i=0;i<pool.length && pick.length<3;i++){
-      var el = pool[i];
-      var id = el.getAttribute('src') || el.currentSrc || i;
-      if (used.has(id)) continue;
-      used.add(id);
-      pick.push(el);
-    }
-    if (!pick.length){ cleanupEmpty(root); return; }
+      prev.addEventListener("click", () => go(index - 1));
+      next.addEventListener("click", () => go(index + 1));
+      track.addEventListener("touchstart", (e) => (startX = e.touches[0].clientX), { passive: true });
+      track.addEventListener(
+        "touchend",
+        (e) => {
+          const dx = e.changedTouches[0].clientX - startX;
+          if (Math.abs(dx) > 42) go(index + (dx < 0 ? 1 : -1));
+        },
+        { passive: true }
+      );
+      go(0);
 
-    pick.forEach(function(img){
-      var card = document.createElement('div');
-      card.className = 'chatshot-card';
-      var a = document.createElement('a');
-      a.href = img.currentSrc || img.src;
-      a.addEventListener('click', function(e){ e.preventDefault(); });
-      if (img.parentNode) img.parentNode.removeChild(img);
-      a.appendChild(img); card.appendChild(a);
-      var openBtn = document.createElement('button');
-      openBtn.className = 'chatshot-open';
-      openBtn.setAttribute('aria-label','Открыть скриншот');
-      openBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h12v12h-2V7.41l-9.29 9.3-1.42-1.42 9.3-9.29H9V3z"/><path d="M5 5h4v2H7v10h10v-2h2v4H5z"/></svg>';
-      card.appendChild(openBtn);
-      grid.appendChild(card);
-    });
-
-    var lb = document.querySelector('.chatshot-lightbox');
-    if (!lb){
-      lb = document.createElement('div');
-      lb.className = 'chatshot-lightbox';
-      lb.innerHTML = '<div class="stage"><img alt="Скриншот"></div><button class="close" aria-label="Закрыть">×</button>';
-      document.body.appendChild(lb);
-      lb.addEventListener('click', function(){ lb.classList.remove('open'); });
-      document.addEventListener('keydown', function(ev){ if (ev.key === 'Escape') lb.classList.remove('open'); });
+      active = true;
+      cleanup = function () {
+        prev.remove();
+        next.remove();
+        const children = Array.from(track.children);
+        children.forEach((c) => grid.insertBefore(c, track));
+        track.remove();
+        grid.classList.add("grid", "grid-cols-1", "md:grid-cols-3", "gap-6");
+        active = false;
+        cleanup = null;
+      };
+    } else if (!isMobile && active && cleanup) {
+      // вернём исходную сетку на десктопе
+      cleanup();
     }
-    var lbImg = lb.querySelector('img');
-    grid.addEventListener('click', function(e){
-      var target = e.target;
-      if (target && target.tagName && target.tagName.toLowerCase()==='img'){
-        lbImg.src = target.currentSrc || target.src;
-        lb.classList.add('open');
-      }
-      if (target.closest && target.closest('.chatshot-open')){
-        var img = target.closest('.chatshot-card').querySelector('img');
-        if (img){ lbImg.src = img.currentSrc || img.src; lb.classList.add('open'); }
-      }
-    });
-
-    cleanupEmpty(root);
   }
 
-  function initBeforeAfter(){
-    function getSectionByHeading(text){
-      var nodes = Array.prototype.slice.call(document.querySelectorAll('h1,h2,h3,h4'));
-      for (var i=0;i<nodes.length;i++){
-        var t = (nodes[i].textContent || '').toLowerCase();
-        if (t.indexOf(text) !== -1) return nodes[i].closest('section') || nodes[i].parentElement;
-      }
-      return null;
-    }
-    var root = document.querySelector('[data-beforeafter], #before-after, .beforeafter-root') || getSectionByHeading('фотографии клиентов');
-    if (!root) return;
-
-    var allImgs = Array.prototype.slice.call(document.querySelectorAll('img'));
-    var byIndex = {};
-    allImgs.forEach(function(img){
-      var src = (img.getAttribute('src')||'').toLowerCase();
-      var m = src.match(/(before|after)\s*([0-9]+)/i);
-      if (m){
-        var kind = m[1].toLowerCase() === 'before' ? 'before' : 'after';
-        var idx = parseInt(m[2],10);
-        byIndex[idx] = byIndex[idx] || {};
-        byIndex[idx][kind] = img.currentSrc || img.src;
-      }
-    });
-
-    var cards = Array.prototype.slice.call(root.querySelectorAll('.compare-card'));
-    if (!cards.length) return;
-
-    cards.forEach(function(card, i){
-      if (card.querySelector('.before-wrapper')) return;
-      var idx = i+1;
-      var beforeUrl = byIndex[idx] && byIndex[idx].before;
-      var afterUrl = byIndex[idx] && byIndex[idx].after;
-
-      function yankNode(url){
-        if (!url) return;
-        var all = Array.prototype.slice.call(document.querySelectorAll('img'));
-        for (var j=0;j<all.length;j++){
-          var n = all[j];
-          var src = n.currentSrc || n.getAttribute('src');
-          if (src === url && !card.contains(n)) { if (n.parentNode) n.parentNode.removeChild(n); break; }
-        }
-      }
-
-      var before = document.createElement('div'); before.className = 'before-wrapper';
-      var after = document.createElement('div'); after.className = 'after-wrapper';
-      var bi = document.createElement('img'); bi.className = 'before-img';
-      var ai = document.createElement('img'); ai.className = 'after-img';
-      if (beforeUrl) bi.src = beforeUrl;
-      if (afterUrl)  ai.src = afterUrl;
-      before.appendChild(bi); after.appendChild(ai);
-      var line = document.createElement('div'); line.className = 'slider-line';
-      var handle = document.createElement('div'); handle.className = 'slider-handle';
-      var icon = document.createElement('div'); icon.className = 'slider-icon'; icon.textContent = '↔'; handle.appendChild(icon);
-      var bl = document.createElement('div'); bl.className = 'label before-label label'; bl.textContent = 'До';
-      var al = document.createElement('div'); al.className = 'label after-label label'; al.textContent = 'После';
-      card.appendChild(before); card.appendChild(after); card.appendChild(line); card.appendChild(handle); card.appendChild(bl); card.appendChild(al);
-
-      before.style.width = '50%'; after.style.width = '50%'; line.style.left = '50%';
-      handle.style.left = '50%'; handle.style.top = '50%'; handle.style.transform = 'translate(-50%, -50%)';
-
-      var dragging = false;
-      function setPos(px){ var rect = card.getBoundingClientRect(); var x = Math.max(rect.left, Math.min(px, rect.right));
-        var p = (x - rect.left) / rect.width * 100; before.style.width = p + '%'; after.style.width = (100 - p) + '%'; line.style.left = p + '%'; handle.style.left = p + '%'; }
-      function onDown(e){ dragging = true; setPos((e.touches? e.touches[0].clientX : e.clientX)); e.preventDefault(); }
-      function onMove(e){ if (!dragging) return; setPos((e.touches? e.touches[0].clientX : e.clientX)); }
-      function onUp(){ dragging = false; }
-      handle.addEventListener('mousedown', onDown); card.addEventListener('mousedown', onDown);
-      window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
-      handle.addEventListener('touchstart', onDown, {passive:false}); card.addEventListener('touchstart', onDown, {passive:false});
-      window.addEventListener('touchmove', onMove, {passive:false}); window.addEventListener('touchend', onUp);
-
-      yankNode(beforeUrl); yankNode(afterUrl);
-    });
-  }
-
-  function init(){ initChatshots(); initBeforeAfter(); }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  window.addEventListener("DOMContentLoaded", init);
+  window.addEventListener("resize", init);
+  window.addEventListener("orientationchange", init);
 })();
-
-
-</script>
-<div aria-hidden="true" class="cs-overlay" id="cs-overlay"></div><script src="js/chatshots.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.innerWidth > 768) return;
-
-  document.querySelectorAll(".clients-grid").forEach(grid => {
-    const cards = [...grid.querySelectorAll(".compare-card")];
-    if (cards.length < 2) return;
-    const track = document.createElement("div");
-    track.className = "mobile-slider-track";
-    cards.forEach(card => track.appendChild(card));
-    grid.innerHTML = "";
-    grid.appendChild(track);
-
-    // создаём кнопки
-    const prev = document.createElement("button");
-    const next = document.createElement("button");
-    prev.className = "t-c-prev";
-    next.className = "t-c-next";
-    prev.textContent = "‹";
-    next.textContent = "›";
-    grid.appendChild(prev);
-    grid.appendChild(next);
-
-    let index = 0;
-    const slideCount = cards.length;
-
-    function showSlide(i) {
-      if (i < 0) i = slideCount - 1;
-      if (i >= slideCount) i = 0;
-      index = i;
-      track.style.transform = `translateX(-${i * 100}%)`;
-    }
-
-    // управление стрелками
-    prev.addEventListener("click", () => showSlide(index - 1));
-    next.addEventListener("click", () => showSlide(index + 1));
-
-    // свайп-поддержка
-    let startX = 0;
-    track.addEventListener("touchstart", e => (startX = e.touches[0].clientX), { passive: true });
-    track.addEventListener("touchend", e => {
-      const dx = e.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) > 50) {
-        showSlide(index + (dx < 0 ? 1 : -1));
-      }
-    });
-
-    showSlide(0);
-  });
-});
 </script>
 
+<div aria-hidden="true" class="cs-overlay" id="cs-overlay"></div>
+<script src="js/chatshots.js"></script>
 </body>
 </html>

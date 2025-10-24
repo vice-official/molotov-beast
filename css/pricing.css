@@ -6,6 +6,7 @@
   --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   --text-dark: #1a1a1a;
   --text-light: #fff;
+  --close-size: 42px;
 }
 
 body {
@@ -99,15 +100,12 @@ body {
   pointer-events: none;
 }
 
-.pricing-card:hover .card-blur::before {
-  backdrop-filter: blur(16px);
-  background: rgba(0, 0, 0, 0.35);
-}
-
+.pricing-card:hover .card-blur::before,
 .pricing-card.is-hovered .card-blur::before {
   backdrop-filter: blur(16px);
   background: rgba(0, 0, 0, 0.35);
 }
+
 .pricing-card:not(.is-hovered) .card-blur::before {
   transition: backdrop-filter 0.6s ease, background 0.6s ease;
 }
@@ -161,14 +159,15 @@ body {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(10, 12, 18, 0.85);
+  background: rgba(15, 18, 25, 0.35);
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 300;
+  z-index: 9999;
   opacity: 0;
   transition: opacity 0.4s ease;
   backdrop-filter: blur(8px);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 .modal.active {
@@ -177,151 +176,60 @@ body {
 }
 
 .modal-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
+  display: flex;
+  flex-direction: column;
   width: 92%;
-  max-width: 1100px;
-  height: 80vh;
+  max-width: 720px;
   border-radius: var(--radius);
   overflow: hidden;
-  background: #000;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+  background: #fff;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25);
   animation: modalPop 0.45s ease forwards;
   transform: scale(0.95);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  max-height: min(92svh, 100dvh - 6vh);
+}
+
+.modal-content > * {
+  min-height: 0;
 }
 
 @keyframes modalPop {
-  from {
-    transform: scale(0.9) translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
+  from { transform: scale(0.9) translateY(20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 .modal-image {
-  background-size: cover;
-  background-position: center;
-  filter: brightness(0.85);
-  transition: transform 0.6s ease;
-}
-
-.modal.active .modal-image {
-  transform: scale(1.02);
+  display: none !important;
 }
 
 .modal-body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  color: var(--text-dark);
+  background: #fff;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 3rem;
-  color: #fff;
-  background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.9));
-  backdrop-filter: blur(12px);
+  padding-right: calc(3rem + var(--close-size) + 0.5rem);
 }
 
 .modal-body h3 {
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin: 0 0 0.5rem;
-}
-
-.modal-price {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 1.2rem;
-}
-
-.btn-buy {
-  background: var(--accent-gradient);
-  color: white;
-  border: none;
-  padding: 0.9rem 2rem;
-  border-radius: 9999px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.25);
-  transition: all 0.3s ease;
-  margin-bottom: 1.5rem;
-  align-self: flex-start;
-}
-
-.btn-buy:hover {
-  background: linear-gradient(135deg, #409cff, #007aff);
-  transform: scale(1.04);
-}
-
-.modal-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 90%;
-}
-
-.btn-close {
-  position: absolute;
-  right: 1.2rem;
-  top: 1.2rem;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  font-size: 1.8rem;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(6px);
-  transition: background 0.3s ease;
-  z-index: 5;
-}
-
-.btn-close:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-body.modal-open header.navbar-mac {
-  filter: blur(6px) brightness(0.7);
-  transition: filter 0.3s ease;
-}
-
-body.modal-open {
-  overflow: hidden;
-}
-
-@media (max-width: 768px) {
-  .modal-content {
-    grid-template-columns: 1fr;
-    height: auto;
-    max-height: 90vh;
-  }
-  .modal-body {
-    padding: 2rem;
-  }
-  .modal-image {
-    height: 250px;
-  }
-}
-
-.modal-body h3 {
-  font-size: 2.8rem;
   font-weight: 900;
-  margin: 0 0 0.8rem;
+  margin: 0 0 0.9rem;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #ffffff, #b3d8ff);
+  background: linear-gradient(135deg, #111, #4b5563);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  word-break: break-word;
+  hyphens: auto;
+  font-size: clamp(2rem, 3vw + 1rem, 3rem);
+  line-height: 1.15;
 }
 
 .modal-price {
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   font-weight: 700;
   background: linear-gradient(135deg, #007aff, #66b2ff, #007aff);
   -webkit-background-clip: text;
@@ -329,19 +237,29 @@ body.modal-open {
   margin-bottom: 1rem;
 }
 
+.modal-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2b2b2b;
+  max-width: 90%;
+}
+
 .btn-buy {
-  background: var(--accent-gradient);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-600, #007aff);
   color: #fff;
-  border: none;
-  padding: 0.9rem 2.2rem;
-  border-radius: 9999px;
-  cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.25);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  box-shadow: 0 6px 18px rgba(0, 122, 255, 0.3);
+  width: 85%;           
+  margin: 0 auto;         
+  cursor: pointer;
 }
 
 .btn-buy::before {
@@ -359,16 +277,89 @@ body.modal-open {
 }
 
 .btn-buy:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
   box-shadow: 0 10px 30px rgba(0, 122, 255, 0.35);
 }
 
-@keyframes pulse-glow {
-  0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(0, 122, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
+.btn-close {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.08);
+  font-size: 1.2rem;
+  color: #111;
+  cursor: pointer;
+  border-radius: 0.75rem;
+  width: var(--close-size);
+  height: var(--close-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease, transform 0.15s ease;
+  z-index: 10;
 }
 
-.btn-buy {
-  animation: pulse-glow 6s infinite;
+.btn-close:hover {
+  background: #f3f4f6;
 }
+
+.btn-close:active {
+  transform: scale(0.96);
+}
+
+body.modal-open header.navbar-mac {
+  filter: blur(6px) brightness(0.9);
+  transition: filter 0.3s ease;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal-body > *:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    align-items: stretch;
+  }
+
+  .modal-content {
+    width: 94%;
+    margin: auto;
+    max-width: 720px;
+  }
+
+  .modal-body {
+    height: 100%;
+    padding-top: calc(1.25rem + var(--close-size) + 0.5rem);
+    padding-right: calc(1.25rem + var(--close-size) + 0.5rem);
+    padding-bottom: 1.25rem;
+    padding-left: 1.25rem;
+  }
+
+  .modal-body h3 {
+    font-size: clamp(1.8rem, 7.5vw, 2.4rem);
+    line-height: 1.15;
+  }
+
+  .btn-buy {
+    width: 100%;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .pricing-grid:hover .pricing-card:not(:hover) { filter: none; }
+  .pricing-card:hover .card-img { transform: none; }
+  .pricing-card:hover .card-blur::before { backdrop-filter: none; background: rgba(0,0,0,0.25); }
+  .btn-buy { transform: none; }
+  .btn-buy::before { display: none; }
+  .btn-buy:hover, .btn-buy:active { transform: none; }
+}
+
+@media (min-width: 769px) {
+  .modal-body h3 { font-size: clamp(2.2rem, 2.2vw + 1rem, 3.2rem); }
+}
+
