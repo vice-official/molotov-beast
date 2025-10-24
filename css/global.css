@@ -84,3 +84,4 @@ html, body {
 
 .social-icon { color: black !important; font-size: 28px; transition: transform 0.2s ease, opacity 0.2s ease; }
 .social-icon:hover { transform: translateY(-4px); opacity: 0.8; }
+body.modal-open { scroll-behavior: auto !important; }

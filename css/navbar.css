@@ -107,3 +107,16 @@ body {
     padding-top: 70px; 
   }
 }
+
+body {
+  padding-top: 80px;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-top: 70px;
+  }
+}
+
+/* 🔧 добавь в конец файла */
+body.modal-open { padding-top: 0 !important; }
