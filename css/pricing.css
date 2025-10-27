@@ -13,14 +13,12 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
   background: linear-gradient(180deg, #f3f6f9 0%, #e9ecf5 100%);
   color: var(--text-dark);
-  margin: 0;
-  padding: 0;
+
 }
 
 .section-title {
   text-align: center;
   font-size: 2rem;
-  margin-top: 3rem;
   font-weight: 700;
 }
 
@@ -35,9 +33,10 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   max-width: 1000px;
-  margin: 0 auto 6rem;
+  margin: 0 auto 0;
   padding: 0 1rem;
   position: relative;
+  padding-block-end: 2.5rem;
 }
 
 .pricing-card {

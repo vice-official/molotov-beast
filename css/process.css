@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Inter:wght@400;600;700&display=swap');
 
 .process-section {
-  background: #fff; /* светлый фон как на остальном сайте */
+  background: #fff;
   color: #0f172a;
   font-family: "Inter", sans-serif;
 }
@@ -16,7 +16,7 @@
 /* сетка шагов */
 .process-step {
   display: grid;
-  grid-template-columns: minmax(50px, 70px) minmax(220px, 340px) 1fr;
+  grid-template-columns: minmax(50px, 70px) minmax(280px, 380px) 1fr; /* Увеличено с 340px до 380px */
   align-items: flex-start;
   gap: 1.6rem;
   padding: 2rem 0;
@@ -49,7 +49,7 @@
 /* основной текст */
 .step-text {
   font-size: 1.05rem;
-  color: #334155; /* тёмно-серый текст для контраста */
+  color: #334155;
   line-height: 1.7;
   max-width: 700px;
 }
@@ -62,13 +62,16 @@
 /* --- адаптив --- */
 @media (max-width: 1200px) {
   .process-step {
-    grid-template-columns: minmax(45px, 60px) minmax(200px, 300px) 1fr;
+    grid-template-columns: minmax(45px, 60px) minmax(260px, 340px) 1fr;
+  }
+  .step-title {
+    white-space: wrap;
   }
 }
 
 @media (max-width: 992px) {
   .process-step {
-    grid-template-columns: minmax(40px, 50px) minmax(180px, 260px) 1fr;
+    grid-template-columns: minmax(40px, 50px) minmax(240px, 300px) 1fr;
     gap: 1.3rem;
   }
 }

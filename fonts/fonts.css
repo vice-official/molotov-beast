@@ -1,0 +1,99 @@
+/* fonts.css */
+@font-face {
+  font-family: 'EuropeExt';
+  src: url('../fonts/europeextnormal.ttf') format('truetype'),
+       url('../fonts/europeext.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EuropeExt';
+  src: url('../fonts/europeextbold.ttf') format('truetype'),
+       url('../fonts/europeext_bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Применение шрифтов к заголовкам */
+h1, h2, h3, h4, h5, h6,
+.hero-title,
+.section-title,
+.font-extrabold,
+.font-bold,
+.font-semibold,
+.faq-question,
+.step-title,
+.cs-title,
+.card-blur h3,
+.pricing-card h3,
+.modal-body h3,
+.navbar-mac .font-semibold {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+/* Специально для основных заголовков */
+h1 {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+h2 {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+h3 {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+/* Для hero-секции */
+.hero-title {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+/* Для секции тарифов */
+.section-title {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+.pricing-card h3 {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+/* Для FAQ */
+.faq-question {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+/* Для процесса */
+.step-title {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+/* Для карточек отзывов и сертификатов */
+.cs-title {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+/* Для модальных окон */
+.modal-body h3 {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
+
+/* Для навбара */
+.navbar-mac .font-semibold {
+  font-family: 'EuropeExt', sans-serif;
+  font-weight: 700;
+}
