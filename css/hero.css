@@ -16,6 +16,12 @@
   clip-path: none;
 }
 
+@supports (background-attachment: fixed) {
+  .hero-bg {
+    background-attachment: fixed;
+  }
+}
+
 /* Hero Content */
 .hero-container {
   position: relative;
