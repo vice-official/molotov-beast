@@ -1,39 +1,39 @@
 /* =========================================================
-   HERO SECTION — Кроссбраузерный вариант без зума на iOS
+   HERO SECTION — финальная версия с чёткой границей
    ========================================================= */
 
-/* Контейнер Hero (в потоке, не фиксированный) */
+/* Контейнер hero */
 .hero-bg {
   position: relative;
   width: 100%;
-  min-height: 100vh; /* базовый фолбек */
+  min-height: 100vh;
   display: flex;
   align-items: center;
-  z-index: 1;
-  overflow: hidden; /* предотвращает “всплытие” фонового слоя */
+  overflow: hidden;
+  z-index: 0;
 }
 
-/* Современные viewport-единицы (исправляют баг 100vh на iOS) */
+/* Современные viewport-единицы для iOS */
 @supports (height: 100svh) {
   .hero-bg {
     min-height: 100svh;
   }
 }
 
-/* Фон через псевдоэлемент — надёжнее, чем background-attachment */
+/* Фон в псевдоэлементе */
 .hero-bg::before {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
   background-image: linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.4)), url('../images/molotov1.jpg');
   background-size: cover;
   background-position: center 15%;
   background-repeat: no-repeat;
-  z-index: 0;
+  z-index: -1;
   transform: translateZ(0);
 }
 
-/* Контент внутри hero */
+/* Контент hero */
 .hero-container {
   position: relative;
   width: 100%;
@@ -57,7 +57,7 @@
   margin-right: auto;
 }
 
-/* Основные секции под геро */
+/* Остальные секции */
 main,
 section:not(.hero-bg),
 #about,
@@ -68,34 +68,34 @@ section:not(.hero-bg),
 #pricing {
   position: relative;
   background: white;
-  z-index: 1;
+  z-index: 2;
 }
 
-/* Ранее хиро было fixed — margin-top больше не нужен */
+/* Чёткая граница между hero и первой секцией */
 #about {
   margin-top: 0 !important;
+  border-top: 4px solid white; /* чёткий белый срез */
   position: relative;
-  background: white;
 }
 
-/* Навбар */
+/* Navbar */
 .navbar-mac {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(10px);
   z-index: 1000;
 }
 
-/* Отступ под фиксированный navbar */
+/* Body */
 body {
   padding-top: 80px;
-  background: white;
+  background: transparent;
 }
 
-/* HERO SOCIALS — анимации и кнопки */
+/* Соц-иконки */
 .hero-socials {
   position: relative;
   display: flex;
@@ -104,7 +104,7 @@ body {
   transform: translateY(20px);
   animation: socialsFadeIn 0.8s ease-out forwards;
   animation-delay: 0.6s;
-  z-index: 2;
+  z-index: 3;
   margin-top: 2rem;
   justify-content: flex-start;
 }
@@ -151,7 +151,7 @@ body {
   color: white;
 }
 
-/* HERO BUTTON */
+/* Кнопка hero */
 .hero-mac-btn {
   position: relative;
   display: inline-flex;
@@ -166,7 +166,7 @@ body {
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  z-index: 1;
+  z-index: 3;
 }
 
 .hero-mac-btn::before {
@@ -201,7 +201,7 @@ body {
   z-index: 2;
 }
 
-/* ======= Адаптив ======= */
+/* Адаптив */
 @media (min-width: 768px) {
   .hero-bg .mx-auto {
     padding-left: 2rem;
@@ -237,7 +237,7 @@ body {
   }
 }
 
-/* ======= Цветовые переменные ======= */
+/* Цветовые переменные */
 :root {
   --brand-600: #007aff;
   --brand-700: #005fcc;
